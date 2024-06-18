@@ -11,7 +11,7 @@ def render():
     print("payload", request.json)
 
     def eventStream():
-        expo_timeout = 1
+        frames = 1
 
         while True:
             # wait for source data to be available, then push it
@@ -20,8 +20,8 @@ def render():
 
             sleep(1)
 
-            expo_timeout += 1
-            if expo_timeout > 5:
+            frames += 1
+            if frames > 30:
                 yield "event: end\n\n"
                 break
 
