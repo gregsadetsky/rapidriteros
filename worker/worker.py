@@ -9,7 +9,6 @@ RENDERER_URLS = {
     "text": "http://127.0.0.1:5000/render",
     "udp": "http://127.0.0.1:6000/render",
 }
-CURRENT_RENDERER_NAME = "text"
 
 
 def receive_frames_from_renderer(renderer_name):
@@ -50,7 +49,7 @@ def show_frame(frame_data):
 
 
 def worker():
-    all_renderers = cycle(["text", "udp"])
+    all_renderers = cycle(["udp", "text"])
 
     while True:
         print("Worker is working...")
@@ -60,6 +59,7 @@ def worker():
             for frame in receive_frames_from_renderer(renderer):
                 # we processed 1 frame, we can do other things now
                 show_frame(frame)
+            sleep(1)
 
 
 if __name__ == "__main__":

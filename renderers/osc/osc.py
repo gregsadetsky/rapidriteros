@@ -2,10 +2,10 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
-from sse_starlette import ServerSentEvent
-from sse_starlette.sse import EventSourceResponse
 
 from fastapi import FastAPI
+from sse_starlette import ServerSentEvent
+from sse_starlette.sse import EventSourceResponse
 
 logging.basicConfig(level=logging.INFO)
 
@@ -76,7 +76,7 @@ async def render_stream() -> AsyncGenerator[ServerSentEvent, None]:
         queues.remove(queue)
 
 
-@app.get("/render")
+@app.post("/render")
 async def render():
     return EventSourceResponse(render_stream())
 
