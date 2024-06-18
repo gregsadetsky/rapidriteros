@@ -1,0 +1,28 @@
+{
+    "version": "1.0",
+    "services": {
+        "worker": {
+            "image": "rapidriteros/worker"
+        },
+        "renderertext": {
+            "image": "rapidriteros/text"
+        },
+        "rendererosc": {
+            "image": "rapidriteros/osc"
+        }
+    },
+    "images": {
+        "rapidriteros/worker": {
+            "dockerfile": "worker/Dockerfile",
+            "context": "worker/."
+        },
+        "rapidriteros/text": {
+            "dockerfile": "renderers/text/Dockerfile",
+            "context": "renderers/text/."
+        },
+        "rapidriteros/osc": {
+            "dockerfile": "renderers/osc/Dockerfile",
+            "context": "renderers/osc/."
+        }
+    }
+}
