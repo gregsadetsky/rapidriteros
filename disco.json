@@ -8,7 +8,12 @@
             "image": "rapidriteros/text"
         },
         "rendererosc": {
-            "image": "rapidriteros/osc"
+            "image": "rapidriteros/osc",
+            "publishedPorts": [{
+                "publishedAs": 12000,
+                "fromContainerPort": 12000,
+                "protocol": "udp"
+            }]
         }
     },
     "images": {
