@@ -6,8 +6,8 @@ import sseclient
 from requests.exceptions import ConnectionError
 
 RENDERER_URLS = {
-    "text": "http://renderertext:8000/render",
-    "udp": "http://rendererosc:8000/render",
+    "text": "http://renderertext/render",
+    "udp": "http://rendererosc/render",
 }
 
 
