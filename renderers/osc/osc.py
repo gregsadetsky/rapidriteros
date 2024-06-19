@@ -30,6 +30,10 @@ class OscUDPServer(asyncio.DatagramProtocol):
             for osc_message in osc_packet.messages:
                 log.info("OSC message: %s", osc_message)
                 log.info("OSC message.message: %s", osc_message.message)
+                log.info("OSC message.message.params: %s", osc_message.message.params)
+                log.info(
+                    "OSC message.message.params[0]: %s", osc_message.message.params[0]
+                )
         except UnicodeDecodeError:
             log.error("Failed to UTF-8 decode OSC str: %s", data)
             return
