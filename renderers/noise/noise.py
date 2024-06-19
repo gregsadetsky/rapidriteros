@@ -26,10 +26,10 @@ def render():
 
             yield f"event: screen_update\ndata: {random_image_base64}\n\n"
 
-            sleep(1)
+            # sleep(1)
 
             frames += 1
-            if frames > 30:
+            if frames > 60:
                 yield "event: end\n\n"
                 break
 
