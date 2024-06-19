@@ -11,7 +11,7 @@ from PIL import Image
 from requests.exceptions import ConnectionError
 
 RENDERER_URLS = {
-    "noise": "http://localhost:8000/render"
+    "noise": "http://rendernoise/render"
     # "text": "http://renderertext/render",
     # "udp": "http://rendererosc/render",
 }
