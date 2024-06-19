@@ -7,6 +7,9 @@
         "renderertext": {
             "image": "rapidriteros/text"
         },
+        "renderernoise": {
+            "image": "rapidriteros/noise"
+        },
         "rendererosc": {
             "image": "rapidriteros/osc",
             "publishedPorts": [{
@@ -24,6 +27,10 @@
         "rapidriteros/text": {
             "dockerfile": "renderers/text/Dockerfile",
             "context": "renderers/text/."
+        },
+        "rapidriteros/noise": {
+            "dockerfile": "renderers/noise/Dockerfile",
+            "context": "renderers/noise/."
         },
         "rapidriteros/osc": {
             "dockerfile": "renderers/osc/Dockerfile",
