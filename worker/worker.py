@@ -11,8 +11,8 @@ import sseclient
 from PIL import Image
 from requests.exceptions import ConnectionError
 
+logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-
 log.info("Initializing Worker")
 
 RENDERER_URLS = {
@@ -43,7 +43,7 @@ def receive_frames_from_renderer(renderer_name):
             timeout=(1, 5),
         )
     except requests.RequestException as e:
-        print("request exception!!", e)
+        log.error("request exception!!", e)
         return
 
     assert response.status_code == 200
@@ -62,7 +62,7 @@ def receive_frames_from_renderer(renderer_name):
             elif event.event == "end":
                 return
     except requests.RequestException as e:
-        print("request exception!!", e)
+        log.error("request exception!!", e)
 
 
 def send_frame_to_display(png_image_data):
@@ -87,13 +87,11 @@ def send_frame_to_display(png_image_data):
 
 
 def worker():
-    all_renderers = cycle(ALL_RENDERERS)
-
     while True:
-        print("Worker is working...")
+        log("Worker is working...")
 
-        for renderer in all_renderers:
-            print("Current renderer:", renderer)
+        for renderer in cycle(ALL_RENDERERS):
+            log.info("Current renderer:", renderer)
             for frame in receive_frames_from_renderer(renderer):
                 # we processed 1 frame, we can do other things now
                 send_frame_to_display(frame)

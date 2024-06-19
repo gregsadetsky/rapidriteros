@@ -9,9 +9,7 @@ from sse_starlette import ServerSentEvent
 from sse_starlette.sse import EventSourceResponse
 
 logging.basicConfig(level=logging.INFO)
-
 log = logging.getLogger(__name__)
-
 log.info("Initializing OSC")
 
 UDP_PORT = 12000
