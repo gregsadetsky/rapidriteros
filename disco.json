@@ -4,11 +4,11 @@
         "worker": {
             "image": "rapidriteros/worker"
         },
-        "renderertext": {
-            "image": "rapidriteros/text"
-        },
         "renderernoise": {
             "image": "rapidriteros/noise"
+        },
+        "rendererimage": {
+            "image": "rapidriteros/image"
         },
         "rendererosc": {
             "image": "rapidriteros/osc",
@@ -24,13 +24,13 @@
             "dockerfile": "worker/Dockerfile",
             "context": "worker/."
         },
-        "rapidriteros/text": {
-            "dockerfile": "renderers/text/Dockerfile",
-            "context": "renderers/text/."
-        },
         "rapidriteros/noise": {
             "dockerfile": "renderers/noise/Dockerfile",
             "context": "renderers/noise/."
+        },
+        "rapidriteros/image": {
+            "dockerfile": "renderers/image/Dockerfile",
+            "context": "renderers/image/."
         },
         "rapidriteros/osc": {
             "dockerfile": "renderers/osc/Dockerfile",

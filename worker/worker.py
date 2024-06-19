@@ -19,6 +19,7 @@ RENDERER_URLS = {
     # "noise": "http://renderernoise/render",
     # "text": "http://renderertext/render",
     "osc": "http://rendererosc/render",
+    "image": "http://rendererimage/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
 
@@ -50,10 +51,6 @@ def receive_frames_from_renderer(renderer_name):
         return
 
     assert response.status_code == 200
-
-    # if response.status_code != 200:
-    # log.info("Screen endpoint returned %d", response.status_code)
-    #     return
 
     try:
         for event in sseclient.SSEClient(response).events():

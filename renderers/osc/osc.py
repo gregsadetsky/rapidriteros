@@ -31,17 +31,17 @@ class OscUDPServer(asyncio.DatagramProtocol):
         global queues
 
         osc_packet = OscPacket(data)
-        log.info("Received OSC packet: %s", osc_packet)
-        log.info("OSC messages: %s", osc_packet.messages)
+        log.info("Received OSC packet")
+        # log.info("OSC messages: %s", osc_packet.messages)
         for osc_message in osc_packet.messages:
-            log.info("OSC message: %s", osc_message)
-            log.info("OSC message.message: %s", osc_message.message)
-            log.info("OSC message.message.params: %s", osc_message.message.params)
+            # log.info("OSC message: %s", osc_message)
+            # log.info("OSC message.message: %s", osc_message.message)
+            # log.info("OSC message.message.params: %s", osc_message.message.params)
             if len(osc_message.message.params) != 1:
                 log.error("received more than 1 param")
                 continue
             message_param_value = osc_message.message.params[0]
-            log.info("message_param_value: %s", message_param_value)
+            log.info("message_param_value len: %d", len(message_param_value))
             if type(message_param_value) != str:
                 log.error("received non-str param value")
                 continue
