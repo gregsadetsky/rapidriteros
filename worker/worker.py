@@ -1,5 +1,6 @@
 import base64
 import io
+import logging
 import socket
 from itertools import cycle
 from time import sleep
