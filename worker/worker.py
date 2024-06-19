@@ -31,6 +31,9 @@ SCREEN_HEIGHT = 38
 
 SCREEN_SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
+RENDERER_CONNECT_TIMEOUT_S = 10
+RENDERER_READ_TIMEOUT_S = 30
+
 
 def receive_frames_from_renderer(renderer_name):
     try:
@@ -40,7 +43,7 @@ def receive_frames_from_renderer(renderer_name):
             stream=True,
             json={"payload": "some data"},
             # timeout is a tuple of (connect, read) second timeout values
-            timeout=(1, 5),
+            timeout=(RENDERER_CONNECT_TIMEOUT_S, RENDERER_READ_TIMEOUT_S),
         )
     except requests.RequestException as e:
         log.error("request exception!! %s", e)
