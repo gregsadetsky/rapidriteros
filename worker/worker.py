@@ -10,10 +10,14 @@ import sseclient
 from PIL import Image
 from requests.exceptions import ConnectionError
 
+log = logging.getLogger(__name__)
+
+log.info("Initializing Worker")
+
 RENDERER_URLS = {
     "noise": "http://renderernoise/render"
     # "text": "http://renderertext/render",
-    # "udp": "http://rendererosc/render",
+    "osc": "http://rendererosc/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
 
@@ -50,7 +54,7 @@ def receive_frames_from_renderer(renderer_name):
     try:
         for event in sseclient.SSEClient(response).events():
             if event.event == "screen_update":
-                print("event.data", event.data)
+                # print("event.data", event.data)
                 base64_text = event.data
                 image_bytes = base64.b64decode(base64_text)
                 yield image_bytes

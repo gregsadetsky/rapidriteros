@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
+from pythonosc.osc_packet import OscPacket
 from sse_starlette import ServerSentEvent
 from sse_starlette.sse import EventSourceResponse
 
@@ -25,8 +26,9 @@ class OscUDPServer(asyncio.DatagramProtocol):
     def datagram_received(self, data, addr):
         global queues
         try:
-            osc_str = data.decode("utf-8")
-            log.info("UDP packet received: %s", osc_str)
+            osc_packet = OscPacket(data)
+            log.info("Received OSC packet: %s", osc_packet)
+            log.info("OSC messages: %s", osc_packet.messages)
         except UnicodeDecodeError:
             log.error("Failed to UTF-8 decode OSC str: %s", data)
             return
