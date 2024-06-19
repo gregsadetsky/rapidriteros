@@ -43,7 +43,7 @@ def receive_frames_from_renderer(renderer_name):
             timeout=(1, 5),
         )
     except requests.RequestException as e:
-        log.error("request exception!!", e)
+        log.error("request exception!! %s", e)
         return
 
     assert response.status_code == 200
@@ -62,7 +62,7 @@ def receive_frames_from_renderer(renderer_name):
             elif event.event == "end":
                 return
     except requests.RequestException as e:
-        log.error("request exception!!", e)
+        log.error("request exception!! %s", e)
 
 
 def send_frame_to_display(png_image_data):
