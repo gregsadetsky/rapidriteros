@@ -1,9 +1,12 @@
 import asyncio
 import logging
+import re
+from base64 import b64encode
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
+from PIL import Image
 from pythonosc.osc_packet import OscPacket
 from sse_starlette import ServerSentEvent
 from sse_starlette.sse import EventSourceResponse
@@ -14,6 +17,9 @@ log.info("Initializing OSC")
 
 UDP_PORT = 12000
 
+SCREEN_WIDTH = 96
+SCREEN_HEIGHT = 38
+
 queues: list[asyncio.Queue[str]] = []
 
 
@@ -23,22 +29,42 @@ class OscUDPServer(asyncio.DatagramProtocol):
 
     def datagram_received(self, data, addr):
         global queues
-        try:
-            osc_packet = OscPacket(data)
-            log.info("Received OSC packet: %s", osc_packet)
-            log.info("OSC messages: %s", osc_packet.messages)
-            for osc_message in osc_packet.messages:
-                log.info("OSC message: %s", osc_message)
-                log.info("OSC message.message: %s", osc_message.message)
-                log.info("OSC message.message.params: %s", osc_message.message.params)
-                log.info(
-                    "OSC message.message.params[0]: %s", osc_message.message.params[0]
-                )
-        except UnicodeDecodeError:
-            log.error("Failed to UTF-8 decode OSC str: %s", data)
-            return
-        for queue in queues:
-            queue.put_nowait(osc_str)
+
+        osc_packet = OscPacket(data)
+        log.info("Received OSC packet: %s", osc_packet)
+        log.info("OSC messages: %s", osc_packet.messages)
+        for osc_message in osc_packet.messages:
+            log.info("OSC message: %s", osc_message)
+            log.info("OSC message.message: %s", osc_message.message)
+            log.info("OSC message.message.params: %s", osc_message.message.params)
+            if len(osc_message.message.params) != 1:
+                log.error("received more than 1 param")
+                continue
+            message_param_value = osc_message.message.params[0]
+            log.info("message_param_value: %s", message_param_value)
+            if type(message_param_value) != str:
+                log.error("received non-str param value")
+                continue
+            if len(message_param_value) != (SCREEN_WIDTH * SCREEN_HEIGHT):
+                log.error("did not receive 96x38 byte string")
+                continue
+            # check that it only has 0 and 1
+            if re.match(r"^[01]+$", message_param_value) is None:
+                log.error("strings contains something other than 0 and 1")
+                continue
+
+            # at this point, assume that we've received a 96x38 byte string of 0 and 1s
+            # make a binary image
+            image = Image.new("1", (SCREEN_WIDTH, SCREEN_HEIGHT))
+            image.putdata([int(bit) for bit in message_param_value])
+            # get bytes
+            image_bytes = image.tobytes()
+            # base64 encode
+            image_base64 = b64encode(image_bytes).decode("utf-8")
+
+            # broadcast frame to all queues
+            for queue in queues:
+                queue.put_nowait(image_base64)
 
     def connection_lost(self, exception):
         try:
