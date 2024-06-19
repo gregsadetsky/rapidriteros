@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 log.info("Initializing Worker")
 
 RENDERER_URLS = {
-    "noise": "http://renderernoise/render"
+    "noise": "http://renderernoise/render",
     # "text": "http://renderertext/render",
     "osc": "http://rendererosc/render",
 }
