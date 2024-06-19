@@ -62,7 +62,8 @@ def receive_frames_from_renderer(renderer_name):
             elif event.event == "end":
                 return
     except requests.RequestException as e:
-        log.error("request exception!! %s", e)
+        # log.error("request exception!! %s", e)
+        return
 
 
 def send_frame_to_display(png_image_data):
@@ -91,7 +92,7 @@ def worker():
         log.info("Worker is working...")
 
         for renderer in cycle(ALL_RENDERERS):
-            log.info("Current renderer:", renderer)
+            log.info("Current renderer: %s", renderer)
             for frame in receive_frames_from_renderer(renderer):
                 # we processed 1 frame, we can do other things now
                 send_frame_to_display(frame)
