@@ -88,7 +88,7 @@ def send_frame_to_display(png_image_data):
 
 def worker():
     while True:
-        log("Worker is working...")
+        log.info("Worker is working...")
 
         for renderer in cycle(ALL_RENDERERS):
             log.info("Current renderer:", renderer)
