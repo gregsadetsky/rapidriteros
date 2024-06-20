@@ -1,3 +1,4 @@
+import logging
 import random
 from base64 import b64encode
 from pathlib import Path
@@ -6,13 +7,20 @@ from time import sleep
 from flask import Flask, Response, request
 from PIL import Image
 
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
+log.info("Initializing Image")
+
 IMAGE_PATH = Path("./recurse.png")
+print("IMAGE_PATH", IMAGE_PATH)
 
 app = Flask(__name__)
 
 
 @app.route("/render", methods=["POST"])
 def render():
+    log.info("image /render endpoint")
+
     def eventStream():
         while True:
             image = Image.open(IMAGE_PATH)
