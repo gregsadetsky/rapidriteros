@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 log.info("Initializing Image")
 
 # consume the generator once here otherwise you'd consume it once below and then it would be gone!!
-ALL_IMAGES_PATH = list(Path("./images").glob("*.png"))
+ALL_IMAGES_PATH = list(sorted(Path("./images").glob("*.png")))
 log.info("ALL_IMAGES_PATH %s", ALL_IMAGES_PATH)
 
 app = Flask(__name__)
