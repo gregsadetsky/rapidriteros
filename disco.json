@@ -7,6 +7,9 @@
         "renderernoise": {
             "image": "rapidriteros/noise"
         },
+        "rendererimage": {
+            "image": "rapidriteros/image"
+        },
         "rendererosc": {
             "image": "rapidriteros/osc",
             "publishedPorts": [{
