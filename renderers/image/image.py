@@ -27,16 +27,16 @@ def render():
             # convert to mode 1!!!!!
             image = image.convert("1")
             # check that mode is 1
-            log.info("image.mode %s", image.mode)
+            # log.info("image.mode %s", image.mode)
             assert image.mode == "1"
             # check that size is 96x38
-            log.info("image.size %s", image.size)
+            # log.info("image.size %s", image.size)
             assert image.size == (96, 38)
             # get png data
             image_bytes = image.tobytes()
             # base64 encode
             image_base64 = b64encode(image_bytes).decode("utf-8")
-            log.info("image_base64 %s", image_base64[:10] + "...")
+            # log.info("image_base64 %s", image_base64[:10] + "...")
 
             yield f"event: screen_update\ndata: {image_base64}\n\n"
 

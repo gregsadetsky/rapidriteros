@@ -29,7 +29,7 @@ def render():
             sleep(1)
 
             frames += 1
-            if frames > 30:
+            if frames > 10:
                 yield "event: end\n\n"
                 break
 

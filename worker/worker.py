@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 log.info("Initializing Worker")
 
 RENDERER_URLS = {
-    # "noise": "http://renderernoise/render",
+    "noise": "http://renderernoise/render",
     # "text": "http://renderertext/render",
     # "osc": "http://rendererosc/render",
     "image": "http://rendererimage/render",
@@ -70,7 +70,7 @@ def send_frame_to_display(pillow_raw_image_data):
     # FIXME
     # FIXME
     # FIXME
-    # THIS ASSUME THAT pillow_raw_image_data WAS IN MODE 1!!!!
+    # THIS ASSUMES THAT pillow_raw_image_data WAS IN MODE 1!!!!
     # IT MIGHT NOT BE!!!
 
     # expecting base64 1 channel png, fail otherwise
