@@ -26,7 +26,7 @@ def render():
 
             yield f"event: screen_update\ndata: {random_image_base64}\n\n"
 
-            sleep(1)
+            sleep(0.1)
 
             frames += 1
             if frames > 10:
