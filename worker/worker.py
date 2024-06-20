@@ -19,7 +19,7 @@ log.info("Initializing Worker")
 RENDERER_URLS = {
     # "noise": "http://renderernoise/render",
     "text": "http://renderertext/render",
-    # "osc": "http://rendererosc/render",
+    "osc": "http://rendererosc/render",
     # "image": "http://rendererimage/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
@@ -103,7 +103,7 @@ def worker():
             json_payload = None
             if renderer == "text":
                 json_payload = {
-                    "text": "now " + str(datetime.now(tz=None)),
+                    "text": "send 3648 chars of 0 and 1 by osc to 10.100.7.28 port 12000",
                 }
             for frame in receive_frames_from_renderer(
                 renderer, json_payload=json_payload
