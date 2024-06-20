@@ -33,8 +33,8 @@ SCREEN_HEIGHT = 38
 
 SCREEN_SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
-RENDERER_CONNECT_TIMEOUT_S = 10
-RENDERER_READ_TIMEOUT_S = 10
+RENDERER_CONNECT_TIMEOUT_S = 5
+RENDERER_READ_TIMEOUT_S = 5
 
 
 def receive_frames_from_renderer(renderer_name, json_payload=None):

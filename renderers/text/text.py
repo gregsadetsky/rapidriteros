@@ -54,7 +54,7 @@ def render():
 
         yield f"event: screen_update\ndata: {image_base64}\n\n"
 
-        sleep(5)
+        sleep(1)
 
         yield "event: end\n\n"
 
