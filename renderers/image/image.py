@@ -43,6 +43,7 @@ def render():
             sleep(1)
 
             yield "event: end\n\n"
+            break
 
     return Response(eventStream(), mimetype="text/event-stream")
 
