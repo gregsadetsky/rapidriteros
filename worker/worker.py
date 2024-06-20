@@ -16,10 +16,10 @@ log = logging.getLogger(__name__)
 log.info("Initializing Worker")
 
 RENDERER_URLS = {
-    "noise": "http://renderernoise/render",
-    # "text": "http://renderertext/render",
-    "osc": "http://rendererosc/render",
-    "image": "http://rendererimage/render",
+    # "noise": "http://renderernoise/render",
+    "text": "http://renderertext/render",
+    # "osc": "http://rendererosc/render",
+    # "image": "http://rendererimage/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
 
@@ -36,13 +36,13 @@ RENDERER_CONNECT_TIMEOUT_S = 10
 RENDERER_READ_TIMEOUT_S = 10
 
 
-def receive_frames_from_renderer(renderer_name):
+def receive_frames_from_renderer(renderer_name, json_payload=None):
     try:
         response = requests.post(
             RENDERER_URLS[renderer_name],
             headers={"Accept": "text/event-stream"},
             stream=True,
-            json={"payload": "some data"},
+            json=json_payload,
             # timeout is a tuple of (connect, read) second timeout values
             timeout=(RENDERER_CONNECT_TIMEOUT_S, RENDERER_READ_TIMEOUT_S),
         )
@@ -99,7 +99,14 @@ def worker():
 
         for renderer in cycle(ALL_RENDERERS):
             log.info("Current renderer: %s", renderer)
-            for frame in receive_frames_from_renderer(renderer):
+            json_payload = None
+            if renderer == "text":
+                json_payload = {
+                    "text": "hello this works",
+                }
+            for frame in receive_frames_from_renderer(
+                renderer, json_payload=json_payload
+            ):
                 # we processed 1 frame, we can do other things now
                 send_frame_to_display(frame)
             sleep(1)
