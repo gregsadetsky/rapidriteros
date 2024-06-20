@@ -18,7 +18,7 @@ log.info("Initializing Worker")
 RENDERER_URLS = {
     # "noise": "http://renderernoise/render",
     # "text": "http://renderertext/render",
-    "osc": "http://rendererosc/render",
+    # "osc": "http://rendererosc/render",
     "image": "http://rendererimage/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
