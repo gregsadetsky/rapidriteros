@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 log.info("Initializing Image")
 
-IMAGE_PATH = Path("./recurse.png")
+IMAGE_PATH = Path("./caption.png")
 log.info("IMAGE_PATH %s", IMAGE_PATH)
 
 app = Flask(__name__)
