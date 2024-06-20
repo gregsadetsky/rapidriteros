@@ -4,8 +4,8 @@
         "worker": {
             "image": "rapidriteros/worker"
         },
-        "rendererimage": {
-            "image": "rapidriteros/image"
+        "renderernoise": {
+            "image": "rapidriteros/noise"
         },
         "rendererosc": {
             "image": "rapidriteros/osc",
