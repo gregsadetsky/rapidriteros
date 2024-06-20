@@ -66,9 +66,15 @@ def receive_frames_from_renderer(renderer_name):
         return
 
 
-def send_frame_to_display(png_image_data):
+def send_frame_to_display(pillow_raw_image_data):
+    # FIXME
+    # FIXME
+    # FIXME
+    # THIS ASSUME THAT pillow_raw_image_data WAS IN MODE 1!!!!
+    # IT MIGHT NOT BE!!!
+
     # expecting base64 1 channel png, fail otherwise
-    pil_image = Image.frombytes("1", (96, 38), png_image_data)
+    pil_image = Image.frombytes("1", (96, 38), pillow_raw_image_data)
     # assert that it's exactly 96x38
     assert pil_image.size == (SCREEN_WIDTH, SCREEN_HEIGHT)
     # assert that its mode is 1 i.e. black and white

@@ -24,6 +24,8 @@ def render():
     def eventStream():
         while True:
             image = Image.open(IMAGE_PATH)
+            # convert to mode 1!!!!!
+            image = image.convert("1")
             # check that mode is 1
             log.info("image.mode %s", image.mode)
             assert image.mode == "1"
