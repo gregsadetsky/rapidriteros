@@ -11,8 +11,8 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 log.info("Initializing Image")
 
-IMAGE_PATH = Path("./caption.png")
-log.info("IMAGE_PATH %s", IMAGE_PATH)
+ALL_IMAGES_PATH = Path("./images").glob("*.png")
+log.info("ALL_IMAGES_PATH %s", ALL_IMAGES_PATH)
 
 app = Flask(__name__)
 
@@ -22,8 +22,9 @@ def render():
     log.info("image /render endpoint")
 
     def eventStream():
-        while True:
-            image = Image.open(IMAGE_PATH)
+        for image_path in ALL_IMAGES_PATH:
+            log.info("image_path %s", image_path)
+            image = Image.open(image_path)
             # convert to mode 1!!!!!
             image = image.convert("1")
             # check that mode is 1
@@ -40,10 +41,9 @@ def render():
 
             yield f"event: screen_update\ndata: {image_base64}\n\n"
 
-            sleep(1)
+            sleep(3)
 
-            yield "event: end\n\n"
-            break
+        yield "event: end\n\n"
 
     return Response(eventStream(), mimetype="text/event-stream")
 
