@@ -2,6 +2,7 @@ import base64
 import io
 import logging
 import socket
+from datetime import datetime
 from itertools import cycle
 from time import sleep
 
@@ -102,7 +103,7 @@ def worker():
             json_payload = None
             if renderer == "text":
                 json_payload = {
-                    "text": "hello this works",
+                    "text": "now " + str(datetime.now(tz=None)),
                 }
             for frame in receive_frames_from_renderer(
                 renderer, json_payload=json_payload
