@@ -1,6 +1,10 @@
 {
     "version": "1.0",
     "services": {
+        "web": {
+            "port": 8080,
+            "image": "rapidriteros/web"
+        },
         "worker": {
             "image": "rapidriteros/worker"
         },
@@ -23,6 +27,10 @@
         }
     },
     "images": {
+        "rapidriteros/web": {
+            "dockerfile": "web/Dockerfile",
+            "context": "web/."
+        },
         "rapidriteros/worker": {
             "dockerfile": "worker/Dockerfile",
             "context": "worker/."
