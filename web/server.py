@@ -9,7 +9,7 @@ from pythonosc import udp_client
 
 app = Flask(__name__)
 
-LOCAL_OSC_SERVER_IP = "127.0.0.1"  # ???
+LOCAL_OSC_SERVER_IP = "10.100.7.28"  # ???
 LOCAL_OSC_SERVER_PORT = 12000
 
 
@@ -31,6 +31,7 @@ def send_one_frame():
     client.send_message("/screen", out)
 
     print("sent")
+    return "ok"
 
 
 if __name__ == "__main__":
