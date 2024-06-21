@@ -27,7 +27,7 @@ def send_one_frame():
     for y in range(38):
         for x in range(96):
             # (x ^ y) % 9
-            out += "1" if ((x + x_delta) ^ (y + y_delta)) % 9 == 0 else "0"
+            out += "1" if (x ^ y) % 9 == 0 else "0"
     client.send_message("/screen", out)
 
     print("sent")
