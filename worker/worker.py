@@ -134,7 +134,7 @@ def worker():
                 # we processed 1 frame, we can do other things now
                 send_frame_to_display(frame)
 
-        time.sleep(1)
+        sleep(1)
 
         # for renderer in cycle(ALL_RENDERERS):
         #     log.info("Current renderer: %s", renderer)
