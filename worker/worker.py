@@ -123,6 +123,7 @@ def worker():
         # fetch all shows from the web microservice
         r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
         all_shows = r.json()["shows"]
+        log.info("got shows from web service: %s", all_shows)
 
         for show in all_shows:
             log.info("Current show: %s", show)
@@ -132,6 +133,8 @@ def worker():
             ):
                 # we processed 1 frame, we can do other things now
                 send_frame_to_display(frame)
+
+        time.sleep(1)
 
         # for renderer in cycle(ALL_RENDERERS):
         #     log.info("Current renderer: %s", renderer)
