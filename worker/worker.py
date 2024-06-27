@@ -104,7 +104,7 @@ def worker():
             if renderer == "text":
                 json_payload = {
                     # "text": "Send 3648 chars of 0 and 1 by OSC to 10.100.7.28 port 12000. the OSC path does not matter. xx",
-                    "text": "Recurse Center Rapid Riter W I P W I P W I P W I P",
+                    "text": "Recurse Center Rapid Riter",
                 }
             for frame in receive_frames_from_renderer(
                 renderer, json_payload=json_payload
