@@ -2,8 +2,14 @@
     "version": "1.0",
     "services": {
         "web": {
-            "port": 8080,
-            "image": "rapidriteros/web"
+            "port": 8000,
+            "image": "rapidriteros/web",
+            "volumes": [
+                {
+                    "name": "sqlite-data",
+                    "destinationPath": "/sqlitedata"
+                }
+            ]
         }
     },
     "images": {
