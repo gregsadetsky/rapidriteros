@@ -4,52 +4,12 @@
         "web": {
             "port": 8080,
             "image": "rapidriteros/web"
-        },
-        "worker": {
-            "image": "rapidriteros/worker"
-        },
-        "renderernoise": {
-            "image": "rapidriteros/noise"
-        },
-        "rendererimage": {
-            "image": "rapidriteros/image"
-        },
-        "renderertext": {
-            "image": "rapidriteros/text"
-        },
-        "rendererosc": {
-            "image": "rapidriteros/osc",
-            "publishedPorts": [{
-                "publishedAs": 12000,
-                "fromContainerPort": 12000,
-                "protocol": "udp"
-            }]
         }
     },
     "images": {
         "rapidriteros/web": {
             "dockerfile": "web/Dockerfile",
             "context": "web/."
-        },
-        "rapidriteros/worker": {
-            "dockerfile": "worker/Dockerfile",
-            "context": "worker/."
-        },
-        "rapidriteros/noise": {
-            "dockerfile": "renderers/noise/Dockerfile",
-            "context": "renderers/noise/."
-        },
-        "rapidriteros/image": {
-            "dockerfile": "renderers/image/Dockerfile",
-            "context": "renderers/image/."
-        },
-        "rapidriteros/text": {
-            "dockerfile": "renderers/text/Dockerfile",
-            "context": "renderers/text/."
-        },
-        "rapidriteros/osc": {
-            "dockerfile": "renderers/osc/Dockerfile",
-            "context": "renderers/osc/."
         }
     }
 }
