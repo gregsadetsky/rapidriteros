@@ -11,17 +11,6 @@
                 }
             ]
         },
-        "hook:deploy:start:before": {
-            "type": "command",
-            "image": "rapidriteros/web",
-            "command": "python manage.py migrate",
-            "volumes": [
-                {
-                    "name": "sqlite-data",
-                    "destinationPath": "/sqlitedata"
-                }
-            ]
-        },
         "worker": {
             "image": "rapidriteros/worker"
         },
