@@ -29,7 +29,7 @@ RENDERER_URLS = {
     "text": os.environ["RENDERER_TEXT_HOST"] + "/render",
     # "text": "http://renderertext/render",
     # "noise": "http://renderernoise/render",
-    # "osc": "http://rendererosc/render",
+    "osc": "http://rendererosc/render",
     # "image": "http://rendererimage/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
@@ -121,38 +121,38 @@ def worker():
     while True:
         log.info("Worker is working...")
 
-        # fetch all shows from the web microservice
-        r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
-        json_response = r.json()
-        # log.info("got response from web service: %s", json_response)
-        all_shows = json_response["shows"]
-        # log.info("got shows from web service: %s", all_shows)
+        # # fetch all shows from the web microservice
+        # r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
+        # json_response = r.json()
+        # # log.info("got response from web service: %s", json_response)
+        # all_shows = json_response["shows"]
+        # # log.info("got shows from web service: %s", all_shows)
 
-        for show in all_shows:
-            log.info("Current show: %s", show)
+        # for show in all_shows:
+        #     log.info("Current show: %s", show)
 
-            for frame in receive_frames_from_renderer(
-                show["show_type"], json_payload=show["payload"]
-            ):
-                # we processed 1 frame, we can do other things now
-                send_frame_to_display(frame)
-
-        sleep(1)
-
-        # for renderer in cycle(ALL_RENDERERS):
-        #     log.info("Current renderer: %s", renderer)
-        #     json_payload = None
-        #     if renderer == "text":
-        #         json_payload = {
-        #             # "text": "Send 3648 chars of 0 and 1 by OSC to 10.100.7.28 port 12000. the OSC path does not matter. xx",
-        #             "text": "Recurse Center Rapid Riter",
-        #         }
         #     for frame in receive_frames_from_renderer(
-        #         renderer, json_payload=json_payload
+        #         show["show_type"], json_payload=show["payload"]
         #     ):
         #         # we processed 1 frame, we can do other things now
         #         send_frame_to_display(frame)
-        #     sleep(1)
+
+        # sleep(1)
+
+        for renderer in cycle(ALL_RENDERERS):
+            log.info("Current renderer: %s", renderer)
+            json_payload = None
+            if renderer == "text":
+                json_payload = {
+                    # "text": "Send 3648 chars of 0 and 1 by OSC to 10.100.7.28 port 12000. the OSC path does not matter. xx",
+                    "text": "Recurse Center Rapid Riter",
+                }
+            for frame in receive_frames_from_renderer(
+                renderer, json_payload=json_payload
+            ):
+                # we processed 1 frame, we can do other things now
+                send_frame_to_display(frame)
+            sleep(1)
 
 
 if __name__ == "__main__":

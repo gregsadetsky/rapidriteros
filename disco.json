@@ -21,6 +21,14 @@
         "renderertext":
         {
             "image": "rapidriteros/text"
+        },
+        "rendererosc": {
+            "image": "rapidriteros/osc",
+            "publishedPorts": [{
+                "publishedAs": 12000,
+                "fromContainerPort": 12000,
+                "protocol": "udp"
+            }]
         }
     },
     "images":
@@ -39,6 +47,10 @@
         {
             "dockerfile": "renderers/text/Dockerfile",
             "context": "renderers/text/."
+        },
+        "rapidriteros/osc": {
+            "dockerfile": "renderers/osc/Dockerfile",
+            "context": "renderers/osc/."
         }
     }
 }
