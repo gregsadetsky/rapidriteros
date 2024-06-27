@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+<body>
+ALL SHOWS:
+
+{% for show in all_shows %}
+  <p>{{ show }}</p>
+{% endfor %}
+
+<hr>
+
+add a text show! in JSON...!! <pre>{"text": "..."}</pre> thanks!
+
+<form action="/add_show" method="post">
+  {% csrf_token %}
+  <input type="text" name="text_show_payload" placeholder='{"text": "..."}'>
+  <input type="submit">
+</form>
+
+</body>
+</html>

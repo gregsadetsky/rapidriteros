@@ -1,6 +1,12 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import base64
 import io
+import json
 import logging
+import os
 import socket
 from datetime import datetime
 from itertools import cycle
@@ -16,10 +22,14 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 log.info("Initializing Worker")
 
+DO_NOT_SEND_TO_RITER = os.environ["DO_NOT_SEND_TO_RITER"] == "true"
+WEB_SERVICE_HOST = os.environ["WEB_SERVICE_HOST"]
+
 RENDERER_URLS = {
+    "text": os.environ["RENDERER_TEXT_HOST"] + "/render",
+    # "text": "http://renderertext/render",
     # "noise": "http://renderernoise/render",
-    "text": "http://renderertext/render",
-    "osc": "http://rendererosc/render",
+    # "osc": "http://rendererosc/render",
     # "image": "http://rendererimage/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
@@ -91,27 +101,52 @@ def send_frame_to_display(pillow_raw_image_data):
     frame_packed_bits = np.packbits(
         np_image.astype("bool"), axis=None, bitorder="little"
     )
-    SCREEN_SOCK.sendto(frame_packed_bits, (SCREEN_UDP_IP, SCREEN_UDP_PORT))
+
+    if DO_NOT_SEND_TO_RITER:
+        # go through the lines and columns
+        # and print '.' for 0 bit and '#' for 1 bit
+        for y in range(SCREEN_HEIGHT):
+            for x in range(SCREEN_WIDTH - 1, 0, -1):
+                if np_image[y][x] == 1:
+                    print("#", end="")
+                else:
+                    print(".", end="")
+            print()
+    else:
+        SCREEN_SOCK.sendto(frame_packed_bits, (SCREEN_UDP_IP, SCREEN_UDP_PORT))
 
 
 def worker():
     while True:
         log.info("Worker is working...")
 
-        for renderer in cycle(ALL_RENDERERS):
-            log.info("Current renderer: %s", renderer)
-            json_payload = None
-            if renderer == "text":
-                json_payload = {
-                    # "text": "Send 3648 chars of 0 and 1 by OSC to 10.100.7.28 port 12000. the OSC path does not matter. xx",
-                    "text": "Recurse Center Rapid Riter",
-                }
+        # fetch all shows from the web microservice
+        r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
+        all_shows = r.json()["shows"]
+
+        for show in all_shows:
+            log.info("Current show: %s", show)
+
             for frame in receive_frames_from_renderer(
-                renderer, json_payload=json_payload
+                show["show_type"], json_payload=show["payload"]
             ):
                 # we processed 1 frame, we can do other things now
                 send_frame_to_display(frame)
-            sleep(1)
+
+        # for renderer in cycle(ALL_RENDERERS):
+        #     log.info("Current renderer: %s", renderer)
+        #     json_payload = None
+        #     if renderer == "text":
+        #         json_payload = {
+        #             # "text": "Send 3648 chars of 0 and 1 by OSC to 10.100.7.28 port 12000. the OSC path does not matter. xx",
+        #             "text": "Recurse Center Rapid Riter",
+        #         }
+        #     for frame in receive_frames_from_renderer(
+        #         renderer, json_payload=json_payload
+        #     ):
+        #         # we processed 1 frame, we can do other things now
+        #         send_frame_to_display(frame)
+        #     sleep(1)
 
 
 if __name__ == "__main__":

@@ -21,12 +21,26 @@
                     "destinationPath": "/sqlitedata"
                 }
             ]
+        },
+        "worker": {
+            "image": "rapidriteros/worker"
+        },
+        "renderertext": {
+            "image": "rapidriteros/text"
         }
     },
     "images": {
         "rapidriteros/web": {
             "dockerfile": "web/Dockerfile",
             "context": "web/."
+        },
+        "rapidriteros/worker": {
+            "dockerfile": "worker/Dockerfile",
+            "context": "worker/."
+        },
+        "rapidriteros/text": {
+            "dockerfile": "renderers/text/Dockerfile",
+            "context": "renderers/text/."
         }
     }
 }
