@@ -6,6 +6,10 @@ from django.shortcuts import render
 from .models import Show
 
 
+def exception(request):
+    raise Exception("This is an exception!")
+
+
 def index(request):
     all_shows = Show.objects.all().order_by("-created_at")
     return render(request, "index.html", {"all_shows": all_shows})
