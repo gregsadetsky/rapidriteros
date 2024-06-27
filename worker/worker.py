@@ -122,7 +122,9 @@ def worker():
 
         # fetch all shows from the web microservice
         r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
-        all_shows = r.json()["shows"]
+        json_response = r.json()
+        log.info("got response from web service: %s", json_response)
+        all_shows = json_response["shows"]
         log.info("got shows from web service: %s", all_shows)
 
         for show in all_shows:
