@@ -1,6 +1,6 @@
 from django.urls import path
 
-from core.views import add_show, get_all_shows, index
+from core.views import add_show, exception, get_all_shows, index
 
 urlpatterns = [
     path("", index, name="index"),
