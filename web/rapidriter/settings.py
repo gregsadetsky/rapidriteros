@@ -33,7 +33,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["https://rapidriter.rcdis.co/"]
+CSRF_TRUSTED_ORIGINS = ["https://rapidriter.rcdis.co"]
 USE_X_FORWARDED_HOST = True
 
 # Application definition
