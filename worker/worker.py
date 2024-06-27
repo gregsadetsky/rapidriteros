@@ -112,6 +112,7 @@ def send_frame_to_display(pillow_raw_image_data):
                 else:
                     print(".", end="")
             print()
+        print("--------------------------------------------------------")
     else:
         SCREEN_SOCK.sendto(frame_packed_bits, (SCREEN_UDP_IP, SCREEN_UDP_PORT))
 
@@ -123,9 +124,9 @@ def worker():
         # fetch all shows from the web microservice
         r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
         json_response = r.json()
-        log.info("got response from web service: %s", json_response)
+        # log.info("got response from web service: %s", json_response)
         all_shows = json_response["shows"]
-        log.info("got shows from web service: %s", all_shows)
+        # log.info("got shows from web service: %s", all_shows)
 
         for show in all_shows:
             log.info("Current show: %s", show)

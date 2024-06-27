@@ -33,7 +33,7 @@ def render():
                 "-fill",
                 "white",
                 "-size",
-                "96x38",
+                "96x",
                 "-pointsize",
                 "8",
                 "-font",
@@ -44,15 +44,37 @@ def render():
             ]
         )
 
+        # imagemagic will return images of 96px of width BUT NOT NECESSARILY
+        # 38 pixels high. if we are less than 38 pixels high, pad with black pixels
+        # and send it back
+
         image = Image.open("/tmp/out.png")
         # convert to 1 mode
         image = image.convert("1")
-        # get png data
-        image_bytes = image.tobytes()
-        # base64 encode
-        image_base64 = b64encode(image_bytes).decode("utf-8")
 
-        yield f"event: screen_update\ndata: {image_base64}\n\n"
+        all_images_to_send = []
+
+        # if image is less than 38 pixels high, pad with black pixels
+        if image.height < 38:
+            new_image = Image.new("1", (96, 38), 0)
+            new_image.paste(image, (0, 0))
+            all_images_to_send = [new_image]
+        else:
+            # if more than 38 pixels high,
+            # extract 38 pixels from the top, then shift y by 1 pixel,
+            # get 38 pixels, etc. until the end of the image
+            for y in range(0, image.height - 38):
+                new_image = image.crop((0, y, 96, y + 38))
+                all_images_to_send.append(new_image)
+
+        for image in all_images_to_send:
+            # get png data
+            image_bytes = image.tobytes()
+            # base64 encode
+            image_base64 = b64encode(image_bytes).decode("utf-8")
+
+            yield f"event: screen_update\ndata: {image_base64}\n\n"
+            sleep(0.1)
 
         sleep(1)
 
