@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from django.utils.log import DEFAULT_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,3 +132,23 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# YOU SHOULD ONLY LOG LIKE THIS ON PROD, NOT ALL THE TIME.....!!!!!!!!!
+# FIXME
+# FIXME
+# FIXME
+# FIXME
+# FIXME
+# FIXME
+
+# start from default values -- so that they can be overriden later
+# https://stackoverflow.com/a/25508761
+LOGGING = DEFAULT_LOGGING
+
+# default logging doesn't log to console with DEBUG=False
+# see https://github.com/django/django/blob/main/django/utils/log.py
+# override i.e. always log to console
+LOGGING["handlers"]["console"] = {
+    "class": "logging.StreamHandler",
+}
