@@ -15,5 +15,32 @@ class Show(models.Model):
     def __str__(self):
         preamble = f"{self.show_type} - {self.created_at}"
         if self.show_type == "text":
-            return f"{preamble} - {self.payload}"
+            return self.payload.get("text")
         return preamble
+
+
+KV_DEFAULTS = {
+    "immediately_show_osc": False,
+}
+
+
+class KV(models.Model):
+    key = models.CharField(max_length=100)
+    value = models.JSONField()
+
+    # make a class method to get a value, resort to the default, otherwise raise
+    @classmethod
+    def get(cls, key):
+        try:
+            return cls.objects.get(key=key).value
+        except cls.DoesNotExist:
+            return KV_DEFAULTS[key]
+
+    # create a set that gets + updates or creates
+    @classmethod
+    def set(cls, key, value):
+        obj, created = cls.objects.update_or_create(key=key, defaults={"value": value})
+        return obj
+
+    def __str__(self):
+        return f"{self.key} - {self.value}"

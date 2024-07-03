@@ -29,7 +29,7 @@ RENDERER_URLS = {
     "text": os.environ["RENDERER_TEXT_HOST"] + "/render",
     # "text": "http://renderertext/render",
     # "noise": "http://renderernoise/render",
-    "osc": "http://rendererosc/render",
+    "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
     # "image": "http://rendererimage/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
@@ -45,6 +45,12 @@ SCREEN_SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
 RENDERER_CONNECT_TIMEOUT_S = 5
 RENDERER_READ_TIMEOUT_S = 5
+
+# this is a **global** (shudder) that specifies whether we are temporarily
+# reading frames from the osc renderer, because we've been informed by the django
+# web service that the osc renderer received a frame and 'requested'
+# to interrupt the current rendering..... this ain't great, but good for now.
+OSC_INTERRUPTION_MODE = False
 
 
 def receive_frames_from_renderer(renderer_name, json_payload=None):
@@ -121,38 +127,60 @@ def worker():
     while True:
         log.info("Worker is working...")
 
-        # # fetch all shows from the web microservice
-        # r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
-        # json_response = r.json()
-        # # log.info("got response from web service: %s", json_response)
-        # all_shows = json_response["shows"]
-        # # log.info("got shows from web service: %s", all_shows)
+        # fetch all shows from the web microservice
+        r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
+        json_response = r.json()
+        # log.info("got response from web service: %s", json_response)
+        all_shows = json_response["shows"]
+        # log.info("got shows from web service: %s", all_shows)
 
-        # for show in all_shows:
-        #     log.info("Current show: %s", show)
+        for show in all_shows:
+            log.info("Current show: %s", show)
 
-        #     for frame in receive_frames_from_renderer(
-        #         show["show_type"], json_payload=show["payload"]
-        #     ):
-        #         # we processed 1 frame, we can do other things now
-        #         send_frame_to_display(frame)
-
-        # sleep(1)
-
-        for renderer in cycle(ALL_RENDERERS):
-            log.info("Current renderer: %s", renderer)
-            json_payload = None
-            if renderer == "text":
-                json_payload = {
-                    "text": "Send 3648 chars of 0 and 1 by OSC to 10.100.7.28 port 12000 to any path. xx",
-                    # "text": "Recurse Center Rapid Riter",
-                }
             for frame in receive_frames_from_renderer(
-                renderer, json_payload=json_payload
+                show["show_type"], json_payload=show["payload"]
             ):
                 # we processed 1 frame, we can do other things now
                 send_frame_to_display(frame)
-            sleep(1)
+
+                # this is BANANAS, but let's see if we should interrupt this program
+                # and immediately switch to OSC mode...
+                r = requests.get(
+                    WEB_SERVICE_HOST + "/internalapi/get_immediately_show_osc"
+                )
+                json_response = r.json()
+                if json_response["immediately_show_osc"]:
+                    # unset it immediately! yes, that's weird!
+                    requests.get(
+                        WEB_SERVICE_HOST + "/internalapi/unset_immediately_show_osc"
+                    )
+
+                    # and immediately show osc!!!
+                    for frame in receive_frames_from_renderer("osc", json_payload={}):
+                        # we processed 1 frame, we can do other things now
+                        send_frame_to_display(frame)
+
+                    # break out of the current show that we interrupted
+                    # so that we don't go through all of the accumulated frames that happened
+                    # while we were showing the osc frames
+                    break
+
+        sleep(1)
+
+        # for renderer in cycle(ALL_RENDERERS):
+        #     log.info("Current renderer: %s", renderer)
+        #     json_payload = None
+        #     if renderer == "text":
+        #         json_payload = {
+        #             "text": "Send 3648 chars of 0 and 1 by OSC to 10.100.7.28 port 12000 to any path. xx",
+        #             # "text": "Recurse Center Rapid Riter",
+        #         }
+        #     for frame in receive_frames_from_renderer(
+        #         renderer, json_payload=json_payload
+        #     ):
+        #         # we processed 1 frame, we can do other things now
+        #         send_frame_to_display(frame)
+        #     sleep(1)
 
 
 if __name__ == "__main__":

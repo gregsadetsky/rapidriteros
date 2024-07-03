@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Show
+from .models import KV, Show
 
 
 class ShowAdmin(admin.ModelAdmin):
@@ -8,3 +8,10 @@ class ShowAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Show, ShowAdmin)
+
+
+class KVAdmin(admin.ModelAdmin):
+    list_display = ("key", "value")
+
+
+admin.site.register(KV, KVAdmin)

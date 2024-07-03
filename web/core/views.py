@@ -1,38 +1,46 @@
 import json
 
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
-from .models import Show
+from .models import KV, Show
 
 
-def exception(request):
-    raise Exception("This is an exception!")
+def get_immediately_show_osc(request):
+    return JsonResponse({"immediately_show_osc": KV.get("immediately_show_osc")})
+
+
+def set_immediately_show_osc(request):
+    KV.set("immediately_show_osc", True)
+    return HttpResponse("ok")
+
+
+def unset_immediately_show_osc(request):
+    KV.set("immediately_show_osc", False)
+    return HttpResponse("ok")
 
 
 def index(request):
-    all_shows = Show.objects.all().order_by("-created_at")
+    all_shows = Show.objects.all().order_by("created_at")
     return render(request, "index.html", {"all_shows": all_shows})
 
 
+def delete_show(request, show_id):
+    Show.objects.filter(id=show_id).delete()
+    return redirect("index")
+
+
 def add_show(request):
-    # get payload from form input name="text_show_payload"
+    text_show_content = request.POST.get("text_show_content")
 
-    payload = request.POST.get("text_show_payload")
-    # payload is JSON! read it, and it fails, alert the user
-    try:
-        payload = json.loads(payload)
-    except json.JSONDecodeError:
-        return HttpResponse("Invalid JSON!!")
+    Show.objects.create(show_type="text", payload={"text": text_show_content})
 
-    Show.objects.create(show_type="text", payload=payload)
-
-    return HttpResponse("Show added!")
+    return redirect("index")
 
 
 # JSON api for the worker to get all shows as a list of dicts
 def get_all_shows(request):
-    all_shows = Show.objects.all().order_by("-created_at")
+    all_shows = Show.objects.all().order_by("created_at")
     shows = []
     for show in all_shows:
         shows.append(

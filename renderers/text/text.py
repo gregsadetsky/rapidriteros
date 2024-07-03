@@ -71,7 +71,7 @@ def render():
         if len(all_images_to_send) > 2:
             # make 5 copies of first frame so that scrolling doesn't begin immediately
             # when frames are shown
-            all_images_to_send = [all_images_to_send[0]] * 5 + all_images_to_send
+            all_images_to_send = [all_images_to_send[0]] * 10 + all_images_to_send
 
         for image in all_images_to_send:
             # get png data

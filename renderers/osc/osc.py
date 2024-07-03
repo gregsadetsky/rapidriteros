@@ -1,10 +1,16 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import asyncio
 import logging
+import os
 import re
 from base64 import b64encode
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
+import requests
 from fastapi import FastAPI
 from PIL import Image
 from pythonosc.osc_packet import OscPacket
@@ -20,6 +26,8 @@ UDP_PORT = 12000
 SCREEN_WIDTH = 96
 SCREEN_HEIGHT = 38
 
+WEB_SERVICE_HOST = os.environ["WEB_SERVICE_HOST"]
+
 queues: list[asyncio.Queue[str]] = []
 
 
@@ -31,8 +39,22 @@ class OscUDPServer(asyncio.DatagramProtocol):
         global queues
 
         osc_packet = OscPacket(data)
-        # log.info("Received OSC packet")
-        # log.info("OSC messages: %s", osc_packet.messages)
+        log.info("Received OSC packet")
+        log.info("OSC messages: %s", osc_packet.messages)
+
+        if len(queues) == 0:
+            # we've received a message, but there are no queues consuming it
+            # at this point, we should let the main web server know that osc
+            # messages are coming in, and it should stop showing frames
+            # from other renderers, and show the content of the osc renderer (i.e. this file/code)
+            # instead. one current issue with this is that the first few osc frames WILL be dropped
+            # as there is no queue for it yet (as queues are created when the WORKER connects to US)
+            # this is good enough for now.
+            log.info("No queues, notifying web service")
+            requests.get(f"{WEB_SERVICE_HOST}/internalapi/set_immediately_show_osc")
+            # that's it! nothing left to do but wait to be connected to
+            return
+
         for osc_message in osc_packet.messages:
             # log.info("OSC message: %s", osc_message)
             # log.info("OSC message.message: %s", osc_message.message)
