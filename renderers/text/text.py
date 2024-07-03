@@ -54,8 +54,9 @@ def render():
 
         all_images_to_send = []
 
-        # if image is less than 38 pixels high, pad with black pixels
-        if image.height < 38:
+        # if image is less than or exactly 38 pixels high, pad with black pixels
+        # (it's better than creating two images if the output is already 38px high)
+        if image.height <= 38:
             new_image = Image.new("1", (96, 38), 0)
             new_image.paste(image, (0, 0))
             all_images_to_send = [new_image]
@@ -66,6 +67,11 @@ def render():
             for y in range(0, image.height - 38):
                 new_image = image.crop((0, y, 96, y + 38))
                 all_images_to_send.append(new_image)
+
+        if len(all_images_to_send) > 2:
+            # make 5 copies of first frame so that scrolling doesn't begin immediately
+            # when frames are shown
+            all_images_to_send = [all_images_to_send[0]] * 5 + all_images_to_send
 
         for image in all_images_to_send:
             # get png data
