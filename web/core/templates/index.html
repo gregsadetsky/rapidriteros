@@ -13,21 +13,35 @@
     <p><b>Show #{{ forloop.counter }}</b> - Type: <b>{{ show.show_type }}</b></p>
     <p>{{ show }}</p>
     <p><a href="{% url 'delete_show' show.id %}" onclick='return confirm("Are you sure you want to delete this show?")'>delete this show!!</a></p>
-    <hr>
+    {% if not forloop.last %}
+      <hr>
+    {% endif %}
   {% endfor %}
 
   <hr style="margin-top:30px;">
+  <hr>
+  <hr>
   
   add a <b>P5</b> show below! just write P5 code!!
+
+  <i>A FEW IMPORTANT HINTS:</i>
+  <pre>
+    - don't call `createCanvas()` or `size()` functions
+    - have a `setup()` and a main `draw()` function
+    - do not call console.log!!
+    - i love u
+  </pre>
 
   <form action="/add_show" method="post">
     {% csrf_token %}
     <input type="hidden" name="show_type" value="p5">
     <p><textarea name="show_content" style="width:200px;height:80px;"></textarea></p>
-    <input type="submit">
+    <input type="submit" value="Add P5 Show">
   </form>
 
   <hr style="margin-top:30px;">
+  <hr>
+  <hr>
 
   add a text show below! just write some text!!
 
@@ -35,7 +49,8 @@
     {% csrf_token %}
     <input type="hidden" name="show_type" value="text">
     <p><textarea name="show_content" style="width:200px;height:80px;"></textarea></p>
-    <input type="submit">
+    <input type="submit" value="Add Text Show">
+
   </form>
 </div>
 
