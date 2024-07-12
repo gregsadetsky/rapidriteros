@@ -1,10 +1,8 @@
-FROM python:3.12.3
+FROM python3.12-nodejs22
 
 WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
-
-FROM node:22.4.1
 
 RUN apt-get update
 RUN apt-get install -y libsdl-pango-dev
