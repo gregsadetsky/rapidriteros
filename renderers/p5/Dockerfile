@@ -1,4 +1,4 @@
-FROM python-nodejs:latest
+FROM nikolaik/python-nodejs:latest
 
 WORKDIR /app
 COPY requirements.txt /app/
