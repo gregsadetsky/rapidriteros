@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:python3.12-nodejs22-alpine
+FROM nikolaik/python-nodejs:python3.12-nodejs22
 
 WORKDIR /app
 COPY requirements.txt /app/
