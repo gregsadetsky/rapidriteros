@@ -16,7 +16,7 @@
         },
         "hook:deploy:start:before":
         {
-            "image": "web",
+            "image": "rapidriteros/web",
             "type": "command",
             "command": "python manage.py migrate",
             "volumes":
