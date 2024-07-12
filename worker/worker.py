@@ -26,8 +26,8 @@ DO_NOT_SEND_TO_RITER = os.environ["DO_NOT_SEND_TO_RITER"] == "true"
 WEB_SERVICE_HOST = os.environ["WEB_SERVICE_HOST"]
 
 RENDERER_URLS = {
-    # "text": os.environ["RENDERER_TEXT_HOST"] + "/render",
-    # "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
+    "text": os.environ["RENDERER_TEXT_HOST"] + "/render",
+    "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
     "p5": os.environ["RENDERER_P5_HOST"] + "/render",
     # "shader": os.environ["RENDERER_SHADER_HOST"] + "/render",
     # ---
