@@ -18,6 +18,8 @@ class Show(models.Model):
         preamble = f"{self.show_type} - {self.created_at}"
         if self.show_type == "text":
             return self.payload.get("text")
+        elif self.show_type == "p5":
+            return self.payload.get("p5")[0:20] + "..."
         return preamble
 
 

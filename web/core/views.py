@@ -31,9 +31,10 @@ def delete_show(request, show_id):
 
 
 def add_show(request):
-    text_show_content = request.POST.get("text_show_content")
+    show_content = request.POST.get("show_content")
+    show_type = request.POST.get("show_type")
 
-    Show.objects.create(show_type="text", payload={"text": text_show_content})
+    Show.objects.create(show_type=show_type, payload={show_type: show_content})
 
     return redirect("index")
 

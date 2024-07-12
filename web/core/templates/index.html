@@ -8,14 +8,24 @@
 </head>
 <body>
 <div id="maincontent">
-  <h3>ALL TEXT SHOWS (SHOWS CAN ONLY BE TEXT FOR NOW!)</h3>
-
+  <h3>ALL TEXT SHOWS</h3>
   {% for show in all_shows %}
-    <p><b>Show #{{ forloop.counter }}</b></p>
+    <p><b>Show #{{ forloop.counter }}</b> - Type: <b>{{ show.show_type }}</b></p>
     <p>{{ show }}</p>
     <p><a href="{% url 'delete_show' show.id %}" onclick='return confirm("Are you sure you want to delete this show?")'>delete this show!!</a></p>
     <hr>
   {% endfor %}
+
+  <hr style="margin-top:30px;">
+  
+  add a <b>P5</b> show below! just write P5 code!!
+
+  <form action="/add_show" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="show_type" value="p5">
+    <p><textarea name="show_content" style="width:200px;height:80px;"></textarea></p>
+    <input type="submit">
+  </form>
 
   <hr style="margin-top:30px;">
 
@@ -23,7 +33,8 @@
 
   <form action="/add_show" method="post">
     {% csrf_token %}
-    <p><textarea name="text_show_content" style="width:200px;height:80px;"></textarea></p>
+    <input type="hidden" name="show_type" value="text">
+    <p><textarea name="show_content" style="width:200px;height:80px;"></textarea></p>
     <input type="submit">
   </form>
 </div>
