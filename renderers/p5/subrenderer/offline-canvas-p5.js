@@ -21,11 +21,12 @@ global.HTMLCanvasElement = global.window.HTMLCanvasElement;
 global.DOMPoint = global.window.DOMPoint;
 
 const startTime = Date.now();
+const RUN_PROGRAM_FOR_SECONDS = 30;
 
 // this determines how long our program runs!!!
 global.window.requestAnimationFrame = (callback) => {
   setTimeout(callback, 1000 / 60);
-  if (Date.now() - startTime > 1000) {
+  if (Date.now() - startTime > RUN_PROGRAM_FOR_SECONDS * 1000) {
     done();
   }
 };

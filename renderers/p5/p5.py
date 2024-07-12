@@ -1,6 +1,7 @@
 import base64
 import io
 import subprocess
+import tempfile
 from pathlib import Path
 from time import sleep
 
@@ -10,24 +11,15 @@ from PIL import Image
 app = Flask(__name__)
 
 SUBRENDERER_JS_PATH = Path(__file__).parent / "subrenderer" / "offline-canvas-p5.js"
-# TODO remove
-# TODO remove
-# TODO remove
-TMP_PROGRAM_PATH = Path(__file__).parent / "subrenderer" / "tmp-p5-program.js"
 
 
-# TODO remove GET
-# TODO remove GET
-# TODO remove GET
-@app.route("/render", methods=["GET", "POST"])
+@app.route("/render", methods=["POST"])
 def render():
-    # TODO get program string as arg!!!
-    # TODO get program string as arg!!!
-    # TODO get program string as arg!!!
+    # get program string as arg
+    program_to_render = request.json["p5"]
 
-    # TODO write program string to temporary file
-    # TODO write program string to temporary file
-    # TODO write program string to temporary file
+    # write program to temporary file
+    TMP_PROGRAM_PATH = (Path(tempfile.mktemp()) / "program.js").resolve()
 
     def eventStream():
         proc = subprocess.Popen(
@@ -50,17 +42,20 @@ def render():
 
             # convert to 1-bit mode --- should we ditter here????????
             image = image.convert("1")
+            # invert the image white/black
+            image = Image.eval(image, lambda x: not x)
             image_bytes = image.tobytes()
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
             yield f"event: screen_update\ndata: {image_base64}\n\n"
 
+        # delete temporary program file
+        TMP_PROGRAM_PATH.unlink()
+
         sleep(1)
         yield "event: end\n\n"
 
     return Response(eventStream(), mimetype="text/event-stream")
-    # p5_to_render = request.json["p5"]
-    # log.info("Rendering p5: %s", p5_to_render)
 
 
 if __name__ == "__main__":
