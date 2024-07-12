@@ -6,7 +6,7 @@ RUN pip install -r requirements.txt
 
 FROM node:22.4.1
 
-RUN apt install libsdl-pango-dev
+RUN apt-get install -y libsdl-pango-dev
 
 WORKDIR /app
 COPY subrenderer/package.json /app/subrenderer/
