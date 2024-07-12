@@ -1,4 +1,4 @@
-FROM python3.12-nodejs22:latest
+FROM python-nodejs:latest
 
 WORKDIR /app
 COPY requirements.txt /app/
