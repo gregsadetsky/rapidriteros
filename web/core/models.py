@@ -4,7 +4,11 @@ from django.db import models
 class Show(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
-    SHOW_TYPES = [("text", "Text"), ("shader", "Shader")]
+    SHOW_TYPES = [
+        ("text", "Text"),
+        ("shader", "Shader"),
+        ("p5", "P5"),
+    ]
 
     show_type = models.CharField(max_length=100, choices=SHOW_TYPES)
     # json blob

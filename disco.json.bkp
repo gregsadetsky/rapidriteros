@@ -1,20 +1,25 @@
 {
     "version": "1.0",
-    "services": {
-        "web": {
-            "port": 8080,
-            "image": "rapidriteros/web"
+    "services":
+    {
+        "web":
+        {
+            "port": 8000,
+            "image": "rapidriteros/web",
+            "volumes":
+            [
+                {
+                    "name": "sqlite-data",
+                    "destinationPath": "/sqlitedata"
+                }
+            ]
         },
-        "worker": {
+        "worker":
+        {
             "image": "rapidriteros/worker"
         },
-        "renderernoise": {
-            "image": "rapidriteros/noise"
-        },
-        "rendererimage": {
-            "image": "rapidriteros/image"
-        },
-        "renderertext": {
+        "renderertext":
+        {
             "image": "rapidriteros/text"
         },
         "rendererosc": {
@@ -24,32 +29,36 @@
                 "fromContainerPort": 12000,
                 "protocol": "udp"
             }]
+        },
+        "rendererp5":
+        {
+            "image": "rapidriteros/p5"
         }
     },
-    "images": {
-        "rapidriteros/web": {
+    "images":
+    {
+        "rapidriteros/web":
+        {
             "dockerfile": "web/Dockerfile",
             "context": "web/."
         },
-        "rapidriteros/worker": {
+        "rapidriteros/worker":
+        {
             "dockerfile": "worker/Dockerfile",
             "context": "worker/."
         },
-        "rapidriteros/noise": {
-            "dockerfile": "renderers/noise/Dockerfile",
-            "context": "renderers/noise/."
-        },
-        "rapidriteros/image": {
-            "dockerfile": "renderers/image/Dockerfile",
-            "context": "renderers/image/."
-        },
-        "rapidriteros/text": {
+        "rapidriteros/text":
+        {
             "dockerfile": "renderers/text/Dockerfile",
             "context": "renderers/text/."
         },
         "rapidriteros/osc": {
             "dockerfile": "renderers/osc/Dockerfile",
             "context": "renderers/osc/."
+        },
+        "rapidriteros/p5": {
+            "dockerfile": "renderers/p5/Dockerfile",
+            "context": "renderers/p5/."
         }
     }
 }

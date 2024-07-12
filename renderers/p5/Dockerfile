@@ -1,5 +1,7 @@
 FROM python:3.12.3
 
+RUN apt install libsdl-pango-dev
+
 WORKDIR /app
 COPY requirements.txt /app/
 
