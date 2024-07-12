@@ -19,8 +19,9 @@ def render():
     program_to_render = request.json["p5"]
 
     # write program to temporary file
-    TMP_PROGRAM_PATH = (Path(tempfile.mktemp()) / "program.js").resolve()
-    TMP_PROGRAM_PATH.write_text(program_to_render)
+    TMP_PROGRAM_PATH = (Path(tempfile.mkdtemp()) / "program.js").resolve()
+    with open(TMP_PROGRAM_PATH, "w") as f:
+        f.write(program_to_render)
 
     def eventStream():
         proc = subprocess.Popen(
