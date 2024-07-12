@@ -2,6 +2,51 @@
     "version": "1.0",
     "services":
     {
+        "web":
+        {
+            "port": 8000,
+            "image": "rapidriteros/web",
+            "volumes":
+            [
+                {
+                    "name": "sqlite-data",
+                    "destinationPath": "/sqlitedata"
+                }
+            ]
+        },
+        "hook:deploy:start:before":
+        {
+            "image": "web",
+            "type": "command",
+            "command": "python manage.py migrate",
+            "volumes":
+            [
+                {
+                    "name": "sqlite-data",
+                    "destinationPath": "/sqlitedata"
+                }
+            ]
+        },
+        "worker":
+        {
+            "image": "rapidriteros/worker"
+        },
+        "renderertext":
+        {
+            "image": "rapidriteros/text"
+        },
+        "rendererosc":
+        {
+            "image": "rapidriteros/osc",
+            "publishedPorts":
+            [
+                {
+                    "publishedAs": 12000,
+                    "fromContainerPort": 12000,
+                    "protocol": "udp"
+                }
+            ]
+        },
         "rendererp5":
         {
             "image": "rapidriteros/p5"
@@ -9,7 +54,28 @@
     },
     "images":
     {
-        "rapidriteros/p5": {
+        "rapidriteros/web":
+        {
+            "dockerfile": "web/Dockerfile",
+            "context": "web/."
+        },
+        "rapidriteros/worker":
+        {
+            "dockerfile": "worker/Dockerfile",
+            "context": "worker/."
+        },
+        "rapidriteros/text":
+        {
+            "dockerfile": "renderers/text/Dockerfile",
+            "context": "renderers/text/."
+        },
+        "rapidriteros/osc":
+        {
+            "dockerfile": "renderers/osc/Dockerfile",
+            "context": "renderers/osc/."
+        },
+        "rapidriteros/p5":
+        {
             "dockerfile": "renderers/p5/Dockerfile",
             "context": "renderers/p5/."
         }
