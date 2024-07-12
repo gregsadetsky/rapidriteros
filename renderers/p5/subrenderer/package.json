@@ -1,0 +1,18 @@
+{
+  "name": "subrenderer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "testprogram.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "jsdom": "^24.1.0",
+    "p5": "^1.9.4",
+    "window": "^4.2.7"
+  }
+}

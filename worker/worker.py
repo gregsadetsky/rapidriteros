@@ -27,8 +27,8 @@ WEB_SERVICE_HOST = os.environ["WEB_SERVICE_HOST"]
 
 RENDERER_URLS = {
     "text": os.environ["RENDERER_TEXT_HOST"] + "/render",
-    # "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
-    "shader": os.environ["RENDERER_SHADER_HOST"] + "/render",
+    "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
+    # "shader": os.environ["RENDERER_SHADER_HOST"] + "/render",
     # ---
     # "noise": "http://renderernoise/render",
     # "image": "http://rendererimage/render",

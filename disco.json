@@ -29,7 +29,11 @@
                 "fromContainerPort": 12000,
                 "protocol": "udp"
             }]
-        }
+        },
+        "rendererp5":
+        {
+            "image": "rapidriteros/p5"
+        },
     },
     "images":
     {
@@ -51,6 +55,10 @@
         "rapidriteros/osc": {
             "dockerfile": "renderers/osc/Dockerfile",
             "context": "renderers/osc/."
+        },
+        "rapidriteros/p5": {
+            "dockerfile": "renderers/p5/Dockerfile",
+            "context": "renderers/p5/."
         }
     }
 }
