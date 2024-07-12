@@ -27,9 +27,10 @@ WEB_SERVICE_HOST = os.environ["WEB_SERVICE_HOST"]
 
 RENDERER_URLS = {
     "text": os.environ["RENDERER_TEXT_HOST"] + "/render",
-    # "text": "http://renderertext/render",
+    # "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
+    "shader": os.environ["RENDERER_SHADER_HOST"] + "/render",
+    # ---
     # "noise": "http://renderernoise/render",
-    "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
     # "image": "http://rendererimage/render",
 }
 ALL_RENDERERS = list(RENDERER_URLS.keys())
@@ -165,7 +166,13 @@ def worker():
                     # while we were showing the osc frames
                     break
 
-        sleep(1)
+            sleep(1)
+
+        if len(all_shows) == 0:
+            log.info(
+                "No shows found, sleeping for 1 second before re while true-ing..."
+            )
+            sleep(1)
 
         # for renderer in cycle(ALL_RENDERERS):
         #     log.info("Current renderer: %s", renderer)
