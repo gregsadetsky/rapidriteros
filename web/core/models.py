@@ -19,7 +19,7 @@ class Show(models.Model):
         if self.show_type == "text":
             return self.payload.get("text")
         elif self.show_type == "p5":
-            return self.payload.get("p5")[0:20] + "..."
+            return self.payload.get("p5")[0:100] + "..."
         return preamble
 
 
