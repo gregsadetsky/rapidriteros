@@ -4,15 +4,15 @@
 
 ## what is this?
 
-a LED display from the 1980s (the copyright on the PCB says 1985), 96 pixels wide by 38 pixels high
+"rapid riter" a LED display from the 1980s (the copyright on the PCB says 1985), 96 pixels wide by 38 pixels high. it's both giant and tiny.
 
 the display is currently installed at the [Recurse Center](https://www.recurse.com/)
 
-this repo/software runs on a connected raspberry pi and goes through "shows" i.e. text, p5js scripts, and (soon) shaders, and displays them on the display
+this repo/software runs on a connected raspberry pi and goes through "shows" i.e. text, p5js scripts, and (soon) shaders, and renders them all on the LED display
 
-(this repo) also presents a web UI so that people can add/edit shows. that is mostly a work in progress.
+(this repo) also presents a django-based web UI so that people can add/edit shows. that is mostly a work in progress.
 
-the rapidriter/raspberry pi are hosted/deployed/managed using [disco](https://letsdisco.dev/)
+the rapidriter/raspberry pi are hosted + deployed + managed using [disco](https://letsdisco.dev/)
 
 ## thanks
 
