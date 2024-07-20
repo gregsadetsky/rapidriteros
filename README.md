@@ -8,8 +8,13 @@ a LED display from the 1980s (the copyright on the PCB says 1985), 96 pixels wid
 
 the display is currently installed at the [Recurse Center](https://www.recurse.com/)
 
-this repo is the software running on a connected raspberry pi which runs "shows" i.e. renders text, p5 scripts, (soon) shaders and shows them on the display
+this repo/software runs on a connected raspberry pi and goes through "shows" i.e. text, p5js scripts, and (soon) shaders, and displays them on the display
 
-it (this repo/code) also presents a web UI so that people can add/edit shows. that is mostly a work in progress.
+(this repo) also presents a web UI so that people can add/edit shows. that is mostly a work in progress.
 
-huge thanks to [Antoine Leclair](https://github.com/antoineleclair/) for his help in architecturing and all things async!
+the rapidriter/raspberry pi are hosted/deployed/managed using [disco](https://letsdisco.dev/)
+
+## thanks
+
+- huge thanks to [Antoine Leclair](https://github.com/antoineleclair/) for his help in architecturing and all things async!
+- thanks to [MaxD](https://github.com/maxdee) who retrofit the display so that it would accept frames over UDP at over 40fps!
