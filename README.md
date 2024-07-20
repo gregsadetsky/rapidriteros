@@ -1,6 +1,6 @@
 # rapidriteros
 
-<img src="https://github.com/user-attachments/assets/8c83438a-b475-4aa2-a457-cfa5b6127c11" style="width:300px">
+<img src="https://github.com/user-attachments/assets/8c83438a-b475-4aa2-a457-cfa5b6127c11" style="width:500px">
 
 ## what is this?
 
