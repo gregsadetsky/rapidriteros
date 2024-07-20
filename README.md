@@ -2,6 +2,8 @@
 
 <img src="https://github.com/user-attachments/assets/8c83438a-b475-4aa2-a457-cfa5b6127c11" style="width:500px">
 
+[see a video here](https://www.youtube.com/watch?v=qUvQodUYQGg)
+
 ## what is this?
 
 the "Rapid Riter" is a LED display from the 1980s (the copyright on the PCB says 1985), 96 pixels wide by 38 pixels high. it's both giant and tiny.
