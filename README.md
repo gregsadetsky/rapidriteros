@@ -20,7 +20,6 @@ the rapidriter/raspberry pi are hosted + deployed + managed using [disco](https:
 
 - huge thanks to [Antoine Leclair](https://github.com/antoineleclair/) for his help in architecturing and all things async!
 - thanks to [MaxD](https://github.com/maxdee) who retrofit the display so that it would accept frames over UDP at over 40fps!
->>>>>>> refs/remotes/origin/main
 
 ---
 
