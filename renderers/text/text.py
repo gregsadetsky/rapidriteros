@@ -35,7 +35,7 @@ def render():
                 "-size",
                 "96x",
                 "-pointsize",
-                "8",
+                "7",
                 "-font",
                 # absolute path to font
                 FONT_PATH.resolve(),
