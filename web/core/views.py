@@ -41,7 +41,7 @@ def add_show(request):
 
 # JSON api for the worker to get all shows as a list of dicts
 def get_all_shows(request):
-    all_shows = Show.objects.all().order_by("created_at")
+    all_shows = Show.objects.filter(disabled=False).order_by("created_at")
     shows = []
     for show in all_shows:
         shows.append(

@@ -113,6 +113,8 @@ def send_frame_to_display(pillow_raw_image_data):
     if DO_NOT_SEND_TO_RITER:
         # go through the lines and columns
         # and print '.' for 0 bit and '#' for 1 bit
+        # clear terminal!!!!!
+        print("\033c")
         for y in range(SCREEN_HEIGHT):
             for x in range(SCREEN_WIDTH - 1, 0, -1):
                 if np_image[y][x] == 1:
@@ -120,7 +122,6 @@ def send_frame_to_display(pillow_raw_image_data):
                 else:
                     print(".", end="")
             print()
-        print("--------------------------------------------------------")
     else:
         SCREEN_SOCK.sendto(frame_packed_bits, (SCREEN_UDP_IP, SCREEN_UDP_PORT))
 

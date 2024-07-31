@@ -14,7 +14,7 @@ log.info("Initializing Text")
 
 app = Flask(__name__)
 
-FONT_PATH = Path("./font-undead-pixel-8.ttf")
+FONT_PATH = Path("./bubbletea.ttf")
 
 
 @app.route("/render", methods=["POST"])
@@ -36,6 +36,8 @@ def render():
                 "96x",
                 "-pointsize",
                 "8",
+                "-interline-spacing",
+                "-2",
                 "-font",
                 # absolute path to font
                 FONT_PATH.resolve(),
@@ -80,9 +82,9 @@ def render():
             image_base64 = b64encode(image_bytes).decode("utf-8")
 
             yield f"event: screen_update\ndata: {image_base64}\n\n"
-            sleep(0.1)
+            sleep(0.2)
 
-        sleep(1)
+        sleep(5)
 
         yield "event: end\n\n"
 

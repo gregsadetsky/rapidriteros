@@ -22,6 +22,8 @@ class Show(models.Model):
             return self.payload.get("p5")[0:100] + "..."
         return preamble
 
+    disabled = models.BooleanField(default=False)
+
 
 KV_DEFAULTS = {
     "immediately_show_osc": False,

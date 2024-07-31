@@ -4,7 +4,7 @@ from .models import KV, Show
 
 
 class ShowAdmin(admin.ModelAdmin):
-    list_display = ("created_at", "show_type", "payload")
+    list_display = ("created_at", "show_type", "payload", "disabled")
 
 
 admin.site.register(Show, ShowAdmin)
