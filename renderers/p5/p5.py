@@ -54,7 +54,7 @@ def render():
         # delete temporary program file
         TMP_PROGRAM_PATH.unlink()
 
-        sleep(1)
+        sleep(0.1)
         yield "event: end\n\n"
 
     return Response(eventStream(), mimetype="text/event-stream")
