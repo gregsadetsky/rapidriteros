@@ -14,7 +14,7 @@ log.info("Initializing Text")
 
 app = Flask(__name__)
 
-FONT_PATH = Path("./bubbletea-1.ttf")
+FONT_PATH = Path("./bubbletea-2.ttf")
 
 
 @app.route("/render", methods=["POST"])

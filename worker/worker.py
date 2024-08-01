@@ -56,10 +56,15 @@ OSC_INTERRUPTION_MODE = False
 
 
 def receive_frames_from_renderer(renderer_name, json_payload=None):
+    print("json_payload", json_payload)
+
     try:
         response = requests.post(
             RENDERER_URLS[renderer_name],
-            headers={"Accept": "text/event-stream"},
+            headers={
+                "Accept": "text/event-stream",
+                "Content-Type": "application/json",
+            },
             stream=True,
             json=json_payload,
             # timeout is a tuple of (connect, read) second timeout values
@@ -67,6 +72,10 @@ def receive_frames_from_renderer(renderer_name, json_payload=None):
         )
     except requests.RequestException as e:
         log.error("request exception!! %s", e)
+        return
+
+    if not response.ok:
+        log.error("request failed!! %s", response.text)
         return
 
     assert response.status_code == 200

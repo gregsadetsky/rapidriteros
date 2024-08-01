@@ -9,26 +9,19 @@ import time
 from base64 import b64encode
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import AsyncGenerator
+from typing import Annotated, AsyncGenerator
 
-from fastapi import FastAPI
+from fastapi import Body, FastAPI, Request
 from PIL import Image
-from pythonosc.osc_packet import OscPacket
 from sse_starlette import ServerSentEvent
 from sse_starlette.sse import EventSourceResponse
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-log.info("Initializing OSC")
-
-UDP_PORT = 12000
+log.info("Initializing shader")
 
 SCREEN_WIDTH = 96
 SCREEN_HEIGHT = 38
-
-WEB_SERVICE_HOST = os.environ["WEB_SERVICE_HOST"]
-
-queues: list[asyncio.Queue[str]] = []
 
 
 @asynccontextmanager
@@ -41,12 +34,17 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-async def render_stream() -> AsyncGenerator[ServerSentEvent, None]:
+async def render_stream(shader_code) -> AsyncGenerator[ServerSentEvent, None]:
     log.info("New HTTP connection for /render")
 
     # create temporary folder where .png files will be written by glslviewer
     temporary_png_directory = tempfile.mkdtemp()
-    # ask glslviewer to record for 30 seconds at some framerate
+
+    path_to_shader_code = os.path.join(temporary_png_directory, "shader.frag")
+
+    # write shader code to temporary directory
+    with open(path_to_shader_code, "w") as f:
+        f.write(shader_code)
 
     # FIXME
     total_files_to_be_generated = 10 * 10
@@ -56,8 +54,7 @@ async def render_stream() -> AsyncGenerator[ServerSentEvent, None]:
     p = subprocess.Popen(
         [
             "glslViewer",
-            # FIXME
-            "/Users/g/Downloads/CellularNoise-1718514605632.frag",
+            path_to_shader_code,
             "--headless",
             "-w",
             # FIXME -- only need to halve output size on macs..?
@@ -66,8 +63,11 @@ async def render_stream() -> AsyncGenerator[ServerSentEvent, None]:
             "19",
             "-E",
             # FIXME
+            # FIXME
+            # FIXME
             "sequence,0,10,10",
-        ]
+        ],
+        cwd=temporary_png_directory,
     )
 
     total_files_processed = 0
@@ -86,7 +86,7 @@ async def render_stream() -> AsyncGenerator[ServerSentEvent, None]:
                 # we're done, break
                 break
 
-            all_png_files = Path(temporary_png_directory).glob("*.png").sort()
+            all_png_files = sorted(list(Path(temporary_png_directory).glob("*.png")))
             if len(all_png_files) == 0:
                 # maybe glslviewer has not started, or there's a hiccup...?
                 # wait and try again.
@@ -102,8 +102,23 @@ async def render_stream() -> AsyncGenerator[ServerSentEvent, None]:
             diddered_png_file_path = png_file_path.replace(".png", "_diddered.png")
 
             # call didder on the frame
-            subprocess.run(
-                f'didder --palette "black white" -i {png_file_path} -o {diddered_png_file_path} bayer 16x16'
+            subprocess.check_output(
+                # FIXME path to didder!!!
+                # FIXME path to didder!!!
+                # FIXME path to didder!!!
+                # FIXME path to didder!!!
+                # f'/opt/homebrew/bin/didder --palette "black white" -i {png_file_path} -o {diddered_png_file_path} bayer 16x16'
+                [
+                    "/opt/homebrew/bin/didder",
+                    "-p",
+                    "black white",
+                    "-i",
+                    png_file_path,
+                    "-o",
+                    diddered_png_file_path,
+                    "bayer",
+                    "16x16",
+                ]
             )
 
             # open the didder frame with imagemagick and get its base64 version
@@ -134,15 +149,26 @@ async def render_stream() -> AsyncGenerator[ServerSentEvent, None]:
         # delete temporary folder
         shutil.rmtree(temporary_png_directory)
 
-        # TODO kill glslviewer
+        # kill glslviewer
+        p.terminate()
 
         log.info("HTTP connection for /render disconnected")
-        queues.remove(queue)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    log.info("Starting shader server")
+    loop = asyncio.get_running_loop()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/render")
-async def render():
-    return EventSourceResponse(render_stream())
+async def render(request: Request):
+    shader_code = (await request.json())["shader"]
+    return EventSourceResponse(render_stream(shader_code=shader_code))
 
 
-log.info("OSC server running")
+log.info("shader server running")
