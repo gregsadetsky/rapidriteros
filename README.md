@@ -10,7 +10,7 @@ the "Rapid Riter" is a LED display from the 1980s (the copyright on the PCB says
 
 the display is currently installed at the [Recurse Center](https://www.recurse.com/)
 
-this repo/software runs on a connected raspberry pi and goes through "shows" i.e. text, p5js scripts, and (soon) shaders, and renders them all on the LED display
+this repo/software runs on a connected raspberry pi and goes through "shows" i.e. text, [p5.js](https://p5js.org/) scripts, and GLSL shaders, and renders them all on the LED display
 
 (this repo) also presents a django-based web UI so that people can add/edit shows. that is mostly a work in progress.
 
