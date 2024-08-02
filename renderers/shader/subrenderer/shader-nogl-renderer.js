@@ -22,7 +22,7 @@ function streamToString(stream) {
 }
 
 async function main() {
-  for (let time = 0; time < 10; time += 0.05) {
+  for (let time = 0; time < 20; time += 0.05) {
     //returns the frag color as [R, G, B, A]
     var color = draw({
       u_mouse: [0.5, 0.5],

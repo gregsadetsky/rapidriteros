@@ -46,6 +46,8 @@ def render():
             image = image.convert("1")
             # invert the image white/black
             # image = Image.eval(image, lambda x: not x)
+            # mirror vertically - bottom is top
+            image = image.transpose(Image.FLIP_TOP_BOTTOM)
             image_bytes = image.tobytes()
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
@@ -54,7 +56,7 @@ def render():
         # delete temporary program file
         TMP_PROGRAM_PATH.unlink()
 
-        sleep(0.1)
+        sleep(0.01)
         yield "event: end\n\n"
 
     return Response(eventStream(), mimetype="text/event-stream")
