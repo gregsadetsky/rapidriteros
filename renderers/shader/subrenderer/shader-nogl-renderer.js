@@ -31,14 +31,15 @@ async function main() {
     });
 
     //Create an image
-    var x = zeros([96, 38, 3]);
+    var x = zeros([96, 38, 4]);
 
-    // iterate through 'color' which is an array of [r, g, b, IGNORE, r, g, b, IGNORE, etc.]
+    // iterate through 'color' which is an array of [r, g, b, a, r, g, b, a, etc.]
     for (var i = 0; i < color.length; i += 4) {
       var j = i / 4;
       x.set(j % 96, Math.floor(j / 96), 0, 255 * color[i]);
       x.set(j % 96, Math.floor(j / 96), 1, 255 * color[i + 1]);
       x.set(j % 96, Math.floor(j / 96), 2, 255 * color[i + 2]);
+      x.set(j % 96, Math.floor(j / 96), 3, 255 * color[i + 3]);
     }
 
     // base64 pipe convert, then console log
