@@ -1,0 +1,61 @@
+{
+  "name": "nogl-shader-output",
+  "version": "1.4.2",
+  "description": "Process fragment shader on a rectangular canvas, webgl-less",
+  "main": "index.js",
+  "directories": {
+    "test": "test",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "node test/index.js",
+    "test:browser": "budo test/index.js -- -t glslify-sync/transform"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dfcreative/nogl-shader-output.git"
+  },
+  "keywords": [
+    "test",
+    "shader",
+    "stackgl",
+    "glsl-transpiler",
+    "stack.gl",
+    "unit",
+    "testing",
+    "glsl",
+    "gpu",
+    "fragment",
+    "glslify",
+    "nogl",
+    "webgl"
+  ],
+  "author": "Deema Yvanow <dfcreative@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dfcreative/nogl-shader-output/issues"
+  },
+  "homepage": "https://github.com/dfcreative/nogl-shader-output#readme",
+  "dependencies": {
+    "glsl-transpiler": "^1.3.0",
+    "xtend": "^4.0.1",
+    "zeros": "^1.0.0"
+  },
+  "devDependencies": {
+    "almost-equal": "^1.1.0",
+    "gl-shader": "^4.2.0",
+    "gl-shader-output": "^2.0.1",
+    "glslify": "^5.0.2",
+    "glslify-sync": "^1.0.0",
+    "is-browser": "^2.0.1",
+    "ndarray": "^1.0.18",
+    "ndarray-imshow": "^1.0.1",
+    "nogl": "^1.0.0",
+    "save-pixels": "^2.3.6",
+    "tst": "^1.3.1",
+    "webgl-context": "^2.2.0"
+  }
+}

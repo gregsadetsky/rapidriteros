@@ -50,6 +50,10 @@
         "rendererp5":
         {
             "image": "rapidriteros/p5"
+        },
+        "renderershader":
+        {
+            "image": "rapidriteros/shader"
         }
     },
     "images":
@@ -78,6 +82,11 @@
         {
             "dockerfile": "renderers/p5/Dockerfile",
             "context": "renderers/p5/."
+        },
+        "rapidriteros/shader":
+        {
+            "dockerfile": "renderers/shader/Dockerfile",
+            "context": "renderers/shader/."
         }
     }
 }
