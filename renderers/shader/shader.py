@@ -45,7 +45,7 @@ def render():
             # convert to 1-bit mode --- should we ditter here????????
             image = image.convert("1")
             # invert the image white/black
-            image = Image.eval(image, lambda x: not x)
+            # image = Image.eval(image, lambda x: not x)
             image_bytes = image.tobytes()
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
