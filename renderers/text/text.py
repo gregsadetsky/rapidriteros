@@ -30,7 +30,7 @@ def render():
                 # in version 7 of imagemagick, 'convert' and 'magick convert'
                 # are considered deprecated in favor of just calling "magick"
                 # version 7 is CRUCIAL to be able to use negative 'interline-spacing' values!!
-                "/app/magick",
+                "magick",
                 "-background",
                 "black",
                 "-fill",
