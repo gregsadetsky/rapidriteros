@@ -20,8 +20,7 @@ the rapidriter/raspberry pi are hosted + deployed + managed using [disco](https:
 
 - huge thanks to [Antoine Leclair](https://github.com/antoineleclair/) for his help in architecturing and all things async!
 - thanks to [MaxD](https://github.com/maxdee) who retrofit the display so that it would accept frames over UDP at over 40fps!
-- thanks to [Jesse Chen](https://github.com/jessechen) for the custom pixel font! You can grab it [here](https://github.com/gregsadetsky/rapidriteros/raw/main/renderers/text/bubbletea.ttf).
-
+- thanks to [Jesse Chen](https://github.com/jessechen) for the custom pixel font! More info in [the font's repo](https://github.com/jessechen/bubbletea)!
 ---
 
 ## how to start / run locally
