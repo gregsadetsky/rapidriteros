@@ -8,7 +8,8 @@ WORKDIR /app
 # RUN wget https://imagemagick.org/archive/binaries/magick
 # RUN chmod +x magick
 
-RUN apt install build-essential make git
+RUN apt-get update
+RUN apt install -y build-essential make git
 RUN git clone https://github.com/ImageMagick/ImageMagick.git
 WORKDIR ImageMagick
 RUN ./configure
