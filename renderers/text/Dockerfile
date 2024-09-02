@@ -4,9 +4,20 @@ WORKDIR /app
 
 # sudo apt install imagemagick
 # RUN apt-get install -y imagemagick
-RUN apt-get install -y wget
-RUN wget https://imagemagick.org/archive/binaries/magick
-RUN chmod +x magick
+# RUN apt-get install -y wget
+# RUN wget https://imagemagick.org/archive/binaries/magick
+# RUN chmod +x magick
+
+RUN apt install build-essential make git
+RUN git clone https://github.com/ImageMagick/ImageMagick.git
+WORKDIR ImageMagick
+RUN ./configure
+RUN make
+RUN make install
+RUN ldconfig /usr/local/lib
+RUN convert -version
+
+WORKDIR /app
 
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
