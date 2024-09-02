@@ -27,7 +27,10 @@ def render():
         # convert -background black -fill white -size 96x38 -font "/Users/g/Desktop/recurse/42.rapidriter/1.mode-tests/1.text-mode/0.fonts-NotJamFontPack/Undead Pixel Light 8/Undead Pixel 8.ttf" caption:'send 3648 chars of 0 and 1 by osc to 10.100.7.28 port 12000' "out-Undead Pixel 8.png";
         subprocess.run(
             [
-                "convert",
+                # in version 7 of imagemagick, 'convert' and 'magick convert'
+                # are considered deprecated in favor of just calling "magick"
+                # version 7 is CRUCIAL to be able to use negative 'interline-spacing' values!!
+                "magick",
                 "-background",
                 "black",
                 "-fill",
