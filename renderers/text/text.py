@@ -14,7 +14,7 @@ log.info("Initializing Text")
 
 app = Flask(__name__)
 
-FONT_PATH = Path("./bubbletea-2.ttf")
+FONT_PATH = Path("./font-undead-pixel-8.ttf")
 
 
 @app.route("/render", methods=["POST"])
@@ -35,7 +35,7 @@ def render():
                 "-size",
                 "96x",
                 "-pointsize",
-                "7",
+                "8",
                 "-font",
                 # absolute path to font
                 FONT_PATH.resolve(),
