@@ -37,7 +37,7 @@
   <form action="/add_show" method="post">
     {% csrf_token %}
     <input type="hidden" name="show_type" value="p5">
-    <p><textarea name="show_content" style="width:200px;height:80px;" placeholder="write your code here even tho it is not a good code editor - for now"></textarea></p>
+    <p><textarea name="show_content" style="width:100%;height:80px;" placeholder="write your code here even tho it is not a good code editor - for now"></textarea></p>
     <input type="submit" value="Add P5 Show">
   </form>
 
@@ -47,10 +47,22 @@
 
   add a text show below! just write some text!!
 
+  <i>AVAILABLE GLYPHS:</i>
+  <pre>
+     !"#$%&'()*+,-./
+		0123456789:;<=>?
+		@ABCDEFGHIJKLMNO
+		PQRSTUVWXYZ[\]^_
+		`abcdefghijklmno
+		pqrstuvwxyz{|}~∎
+  </pre>
+
+  feel free to <a href="https://recurse.zulipchat.com/#narrow/dm/7864">ping @jessechen</a> or <a href="https://github.com/jessechen/bubbletea">make a pull request</a> to add more!!
+
   <form action="/add_show" method="post">
     {% csrf_token %}
     <input type="hidden" name="show_type" value="text">
-    <p><textarea name="show_content" style="width:200px;height:80px;" placeholder='write your text here'></textarea></p>
+    <p><textarea name="show_content" style="width:100%;height:80px;" placeholder='write your text here'></textarea></p>
     <input type="submit" value="Add Text Show">
 
   </form>
