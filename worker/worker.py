@@ -176,6 +176,14 @@ def worker():
                     # so that we don't go through all of the accumulated frames that happened
                     # while we were showing the osc frames
                     break
+                if json_response["debug_mode"]:
+                    debug_show = all_shows[27]
+                    frames = receive_frames_from_renderer(debug_show["show_type"], json_payload=debug_show["payload"])
+                    for frame in frames:
+                        send_frame_to_display(frame)
+                    break
+
+                    
 
             sleep(1)
 
