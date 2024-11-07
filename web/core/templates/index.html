@@ -66,6 +66,28 @@
     <input type="submit" value="Add Text Show">
 
   </form>
+
+  <hr style="margin-top:30px;">
+  <hr>
+  <hr>
+
+  add a WASM show below! just write some WASM!!
+
+  <i>HOW TO WASM:</i>
+  <pre>
+    - Paste your <a href="https://developer.mozilla.org/en-US/docs/WebAssembly/Understanding_the_text_format">WebAssembly Text (WAT)</a> file here
+    - have a `next_frame` function that returns a 96x38 array of booleans, or an empty array to indicate you're done
+  </pre>
+
+  feel free to <a href="https://recurse.zulipchat.com/#narrow/dm/7864">ping @jessechen</a> or <a href="https://github.com/jessechen/bubbletea">make a pull request</a> to add more!!
+
+  <form action="/add_show" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="show_type" value="wasm">
+    <p><textarea name="show_content" style="width:100%;height:80px;" placeholder='paste (or hand-write!) your WAT WASM here'></textarea></p>
+    <input type="submit" value="Add WASM Show">
+
+  </form>
 </div>
 
 <hr style="margin-top:30px;">

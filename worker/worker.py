@@ -30,6 +30,7 @@ RENDERER_URLS = {
     "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
     "p5": os.environ["RENDERER_P5_HOST"] + "/render",
     "shader": os.environ["RENDERER_SHADER_HOST"] + "/render",
+    "wasm": os.environ["RENDERER_WASM_HOST"] + "/render",
     # ---
     # "noise": "http://renderernoise/render",
     # "image": "http://rendererimage/render",
