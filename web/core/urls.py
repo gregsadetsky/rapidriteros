@@ -8,6 +8,9 @@ from core.views import (
     index,
     set_immediately_show_osc,
     unset_immediately_show_osc,
+    get_immediately_show_show,
+    set_immediately_show_show,
+    unset_immediately_show_show,
 )
 
 urlpatterns = [
@@ -29,5 +32,20 @@ urlpatterns = [
         "internalapi/unset_immediately_show_osc",
         unset_immediately_show_osc,
         name="unset_immediately_show_osc",
+    ),
+    path(
+        "set_immediately_show_show/<int:show_id>",
+        set_immediately_show_show,
+        name="set_immediately_show_show",
+    ),
+    path(
+        "get_immediately_show_show",
+        get_immediately_show_show,
+        name="get_immediately_show_show",
+    ),
+    path(
+        "unset_immediately_show_show",
+        unset_immediately_show_show,
+        name="unset_immediately_show_show",
     ),
 ]
