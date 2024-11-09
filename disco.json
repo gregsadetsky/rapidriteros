@@ -54,6 +54,10 @@
         "renderershader":
         {
             "image": "rapidriteros/shader"
+        },
+        "rendererwasm":
+        {
+            "image": "rapidriteros/wasm"
         }
     },
     "images":
@@ -87,6 +91,11 @@
         {
             "dockerfile": "renderers/shader/Dockerfile",
             "context": "renderers/shader/."
+        },
+        "rapidriteros/wasm":
+        {
+            "dockerfile": "renderers/wasm/Dockerfile",
+            "context": "renderers/wasm/."
         }
     }
 }
