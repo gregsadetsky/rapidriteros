@@ -14,9 +14,20 @@ def set_immediately_show_osc(request):
     KV.set("immediately_show_osc", True)
     return HttpResponse("ok")
 
-
 def unset_immediately_show_osc(request):
     KV.set("immediately_show_osc", False)
+    return HttpResponse("ok")
+
+def get_immediately_show_show(request):
+    return JsonResponse({"immediately_show_show": KV.get("immediately_show_show")})
+
+
+def set_immediately_show_show(request, show_id):
+    KV.set("immediately_show_show", show_id)
+    return HttpResponse("ok")
+
+def unset_immediately_show_show(request):
+    KV.set("immediately_show_show", False)
     return HttpResponse("ok")
 
 

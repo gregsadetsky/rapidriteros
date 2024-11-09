@@ -13,6 +13,7 @@
     <p><b>Show #{{ forloop.counter }}</b> - Type: <b>{{ show.show_type }}</b></p>
     <p>{{ show }}</p>
     <p><a href="{% url 'delete_show' show.id %}" onclick='return confirm("Are you sure you want to delete this show?")'>delete this show!!</a></p>
+    <p><a href="{% url 'set_immediately_show_show' show.id %}">SHOW THIS SHOW NOWWWW!!!!111!!!</a></p>
     {% if not forloop.last %}
       <hr>
     {% endif %}
