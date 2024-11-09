@@ -27,6 +27,7 @@ class Show(models.Model):
 
 KV_DEFAULTS = {
     "immediately_show_osc": False,
+    "immediately_show_show": None,
 }
 
 
