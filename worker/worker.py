@@ -177,6 +177,35 @@ def worker():
                     # while we were showing the osc frames
                     break
 
+                # STILL BANANAS, now we're checking to see if we should
+                # interrupt this program in favor of immediately showing one
+                # that a user has requested via the web UI (see {get,set,unset}_immediately_show_show)
+                r = requests.get(
+                    WEB_SERVICE_HOST + "/get_immediately_show_show"
+                )
+                json_response = r.json()
+                if json_response["immediately_show_show"]:
+                    print(f"IMMEDIATELY JUMPING TO SHOW {show["id"]}")
+                    # unset it immediately! yes, that's (still) weird!
+                    requests.get(
+                        WEB_SERVICE_HOST + "/unset_immediately_show_show"
+                    )
+
+                    filtered_shows = [show for show in all_shows if show["id"] == json_response["immediately_show_show"]]
+                    if len(filtered_shows) != 1:
+                        break
+                    show = filtered_shows[0]
+
+                    # and immediately show show!!!
+                    for frame in receive_frames_from_renderer(show["show_type"], json_payload=show["payload"]):
+                        # we processed 1 frame, we can do other things now
+                        send_frame_to_display(frame)
+
+                    # break out of the current show that we interrupted
+                    # so that we don't go through all of the accumulated frames that happened
+                    # while we were showing the osc frames
+                    break
+
             sleep(1)
 
         if len(all_shows) == 0:
