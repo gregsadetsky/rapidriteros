@@ -57,3 +57,80 @@ python p5.py
 ```
 
 - other renderers might require `npm install`, etc.
+
+## Running everything in Docker
+
+1. Create a bridge network with `docker network create rapidriter`
+
+2. Build and run the web server
+
+```bash
+cd web
+
+docker build -t rapidriteros/web .
+
+docker run \
+  --rm \
+  --network=rapidriter \
+  --name=rrweb \
+  -p 8000:8000 \
+  rapidriteros/web
+```
+
+3. Build and run the worker
+
+First, make sure you have a `worker/.env` that looks something like:
+
+```
+RENDERER_OSC_HOST=""
+RENDERER_TEXT_HOST="http://rrtext:80"
+RENDERER_SHADER_HOST=""
+RENDERER_P5_HOST=""
+RENDERER_WASM_HOST="http://rrwasm:80"
+
+DO_NOT_SEND_TO_RITER="true"
+
+WEB_SERVICE_HOST="http://rrweb:8000"
+```
+
+The `rrtext`, `rrwasm`, and `rrweb` refer to the other containers by their names using in-Docker networking.
+
+```bash
+cd worker
+
+docker build -t rapidriteros/worker .
+
+docker run \
+  --rm \
+  --volume .:/app \
+  --network=rapidriter \
+  rapidriteros/worker
+```
+
+4. Build and run (for example) the text renderer
+
+```bash
+cd renderers/text
+
+docker build -t rapidriteros/text .
+
+docker run \
+  --rm \
+  --network=rapidriter \
+  --name=rrtext \
+  rapidriteros/text
+```
+
+5. Add the WASM renderer for good measure
+
+```bash
+cd renderers/wasm
+
+docker build -t rapidriteros/wasm .
+
+docker run \
+  --rm \
+  --network=rapidriter \
+  --name=rrwasm \
+  rapidriteros/wasm
+```

@@ -67,6 +67,31 @@
     <input type="submit" value="Add Text Show">
 
   </form>
+
+  <hr style="margin-top:30px;">
+  <hr>
+  <hr>
+
+  add a WASM show below! just write some WASM!!
+
+  <i>HOW TO WASM:</i>
+  <pre>
+    - Paste your <a href="https://developer.mozilla.org/en-US/docs/WebAssembly/Understanding_the_text_format">WebAssembly Text (WAT)</a> file here
+    - implement two functions
+      - a `next_frame` function with the signature: next_frame(frame_num: u16) -> *const u8
+        - return value is a pointer to an array of 456 bytes, each bit represents a location starting at the top-left and going to the bottom-right.
+      - a `is_done` function with the signature: is_done(frame_num: u16) -> u8
+        - return value is 0 for "not done" and 1 for "yeah done"
+    - See <a href="https://git.sr.ht/~bsprague/recurse/tree/main/item/rapidriter/simpletest">an example implementation in Rust</a>
+  </pre>
+
+  <form action="/add_show" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="show_type" value="wasm">
+    <p><textarea name="show_content" style="width:100%;height:80px;" placeholder='paste (or hand-write!) your WAT WASM here'></textarea></p>
+    <input type="submit" value="Add WASM Show">
+
+  </form>
 </div>
 
 <hr style="margin-top:30px;">
