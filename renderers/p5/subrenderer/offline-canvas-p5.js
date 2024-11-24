@@ -19,6 +19,7 @@ global.navigator = global.window.navigator;
 global.HTMLCanvasElement = global.window.HTMLCanvasElement;
 // override DOMPoint
 global.DOMPoint = global.window.DOMPoint;
+global.Event = global.window.Event;
 
 const startTime = Date.now();
 const RUN_PROGRAM_FOR_SECONDS = 30;

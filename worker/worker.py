@@ -147,8 +147,8 @@ def worker():
 
         for show in all_shows:
             # Just too noisy for WASM
-            if show["show_type"] != "wasm":
-                log.info("Current show: %s", show)
+            print('show type', show["show_type"])
+            print('show', json.dumps(show)[:100], '...')
 
             for frame in receive_frames_from_renderer(
                 show["show_type"], json_payload=show["payload"]

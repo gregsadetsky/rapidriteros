@@ -1,3 +1,5 @@
+// https://github.com/Russ741/droste-p5/blob/main/sketch.js
+
 class Shape {
   relX;
   relY;
@@ -40,12 +42,12 @@ const recursions = [new Recursion(shapes[3]), new Recursion(shapes[4])];
 const recurseMillis = 2000;
 
 function setup() {
-  width = 500;
-  height = 500;
+  width = 96;
+  height = 38;
   loopRatio = 1;
   loopRatio = recursions.reduce((acc, cur) => acc * cur.relR, loopRatio);
   loopMillis = recursions.length * recurseMillis;
-  createCanvas(width, height);
+  // createCanvas(width, height);
   startMillis = millis();
   noStroke();
 }
@@ -64,7 +66,7 @@ function drawRecursive(r, x, y) {
     drawRecursive(
       r * recursion.relR,
       r * recursion.relX + x,
-      r * recursion.relY + y
+      r * recursion.relY + y,
     );
   }
 }
