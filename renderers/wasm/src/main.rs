@@ -8,10 +8,10 @@ use futures::stream::Stream;
 use serde::Deserialize;
 use std::{
     convert::Infallible,
-    thread::sleep,
+    thread,
     time::{Duration, Instant},
 };
-use wasmer::{imports, Instance, Module, Store, TypedFunction, WasmPtr};
+use wasmer::{imports, Instance, Module, Store, Value};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -32,9 +32,6 @@ struct WasmRunner {
     store: Store,
     instance: Instance,
 
-    next_frame_fn: TypedFunction<u16, WasmPtr<[u8; 456]>>,
-    is_done: TypedFunction<u16, u8>,
-
     i: u16,
     returned_end: bool,
 
@@ -48,16 +45,9 @@ impl WasmRunner {
         let import_object = imports! {};
         let instance = Instance::new(&mut store, &module, &import_object)?;
 
-        let next_frame_fn: TypedFunction<u16, WasmPtr<[u8; 456]>> =
-            instance.exports.get_typed_function(&store, "next_frame")?;
-        let is_done: TypedFunction<u16, u8> =
-            instance.exports.get_typed_function(&store, "is_done")?;
-
         Ok(WasmRunner {
             store,
             instance,
-            next_frame_fn,
-            is_done,
             i: 0,
             returned_end: false,
             last_frame_send: None,
@@ -81,21 +71,37 @@ impl Iterator for WasmRunner {
             self.returned_end = true;
             return Some(Ok(Event::default().event("end")));
         }
-        let done = self.is_done.call(&mut self.store, self.i).unwrap();
-        if done == 1 {
-            self.returned_end = true;
-            return Some(Ok(Event::default().event("end")));
-        }
-        let ptr = self.next_frame_fn.call(&mut self.store, self.i).unwrap();
-        self.i += 1;
+
+        let mut img = [0; 456];
         let memory = self.instance.exports.get_memory("memory").unwrap();
+        {
+            let view = memory.view(&self.store);
+            view.write(1, &img).unwrap();
+        }
+
+        let next_frame_fn = self.instance.exports.get_function("next_frame").unwrap();
+
+        let done = next_frame_fn
+            .call(
+                &mut self.store,
+                &[Value::I32(self.i as i32), Value::I32(1 as i32)],
+            )
+            .unwrap();
+        if let Value::I32(v) = done[0] {
+            if v == 1 {
+                self.returned_end = true;
+                return Some(Ok(Event::default().event("end")));
+            }
+        }
+        self.i += 1;
         let view = memory.view(&self.store);
-        let img = ptr.read(&view).unwrap();
+        view.read(1, img.as_mut_slice()).unwrap();
 
         let now = Instant::now();
         if let Some(last_frame) = self.last_frame_send {
-            if now < last_frame + FRAME_DURATION {
-                sleep(FRAME_DURATION - (now - last_frame));
+            let frame_delta: Duration = now - last_frame;
+            if frame_delta < FRAME_DURATION {
+                thread::sleep(FRAME_DURATION - frame_delta);
             }
         }
         self.last_frame_send = Some(now);
