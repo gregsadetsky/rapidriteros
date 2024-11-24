@@ -53,4 +53,4 @@ def unset_immediately_show_osc(request):
 
 def set_immediately_show_show(request, show_id):
     send_event("events", "show_immediately", {"show_id": show_id})
-    return HttpResponse("ok")
+    return redirect("index")

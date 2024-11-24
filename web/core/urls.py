@@ -10,7 +10,6 @@ from core.views import (
     set_immediately_show_osc,
     set_immediately_show_show,
     unset_immediately_show_osc,
-    unset_immediately_show_show,
 )
 
 urlpatterns = [
