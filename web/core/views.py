@@ -2,33 +2,9 @@ import json
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django_eventstream import send_event
 
 from .models import KV, Show
-
-
-def get_immediately_show_osc(request):
-    return JsonResponse({"immediately_show_osc": KV.get("immediately_show_osc")})
-
-
-def set_immediately_show_osc(request):
-    KV.set("immediately_show_osc", True)
-    return HttpResponse("ok")
-
-def unset_immediately_show_osc(request):
-    KV.set("immediately_show_osc", False)
-    return HttpResponse("ok")
-
-def get_immediately_show_show(request):
-    return JsonResponse({"immediately_show_show": KV.get("immediately_show_show")})
-
-
-def set_immediately_show_show(request, show_id):
-    KV.set("immediately_show_show", show_id)
-    return HttpResponse("ok")
-
-def unset_immediately_show_show(request):
-    KV.set("immediately_show_show", False)
-    return HttpResponse("ok")
 
 
 def index(request):
@@ -59,3 +35,22 @@ def get_all_shows(request):
             {"id": show.id, "show_type": show.show_type, "payload": show.payload}
         )
     return JsonResponse({"shows": shows})
+
+
+def get_immediately_show_osc(request):
+    return JsonResponse({"immediately_show_osc": KV.get("immediately_show_osc")})
+
+
+def set_immediately_show_osc(request):
+    KV.set("immediately_show_osc", True)
+    return HttpResponse("ok")
+
+
+def unset_immediately_show_osc(request):
+    KV.set("immediately_show_osc", False)
+    return HttpResponse("ok")
+
+
+def set_immediately_show_show(request, show_id):
+    send_event("events", "show_immediately", {"show_id": show_id})
+    return HttpResponse("ok")

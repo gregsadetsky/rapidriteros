@@ -39,7 +39,7 @@ the rapidriter/raspberry pi are hosted + deployed + managed using [disco](https:
 ```bash
 cd web
 source venv/bin/activate
-python manage.py runserver
+./bin/serve.sh
 ```
 
 - start worker
