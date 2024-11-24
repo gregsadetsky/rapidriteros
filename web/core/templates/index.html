@@ -77,11 +77,11 @@
   <i>HOW TO WASM:</i>
   <pre>
     - Paste your <a href="https://developer.mozilla.org/en-US/docs/WebAssembly/Understanding_the_text_format">WebAssembly Text (WAT)</a> file here
-    - implement two functions
-      - a `next_frame` function with the signature: next_frame(frame_num: u16) -> *const u8
-        - return value is a pointer to an array of 456 bytes, each bit represents a location starting at the top-left and going to the bottom-right.
-      - a `is_done` function with the signature: is_done(frame_num: u16) -> u8
-        - return value is 0 for "not done" and 1 for "yeah done"
+    - implement a `next_frame` function with the signature: next_frame(frame: u16, ptr: *mut u8) -> u8
+        - first input is the current (zero-indexed) frame
+        - second input is a pointer to the 456-byte array
+        - return value is zero if you have more frames to render, one if you're done rendering things
+          - But you only get 100 frames, don't be greedy!
     - See <a href="https://git.sr.ht/~bsprague/recurse/tree/main/item/rapidriter/simpletest">an example implementation in Rust</a>
   </pre>
 
