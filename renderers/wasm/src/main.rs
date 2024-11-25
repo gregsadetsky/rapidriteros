@@ -6,11 +6,8 @@ use axum::{
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use futures::stream::Stream;
 use serde::Deserialize;
-use std::{
-    convert::Infallible,
-    thread,
-    time::{Duration, Instant},
-};
+use std::{convert::Infallible, time::Duration};
+use tokio_stream::StreamExt;
 use wasmer::{imports, Instance, Module, Store, Value};
 
 #[tokio::main]
@@ -34,8 +31,6 @@ struct WasmRunner {
 
     i: u16,
     returned_end: bool,
-
-    last_frame_send: Option<Instant>,
 }
 
 impl WasmRunner {
@@ -50,7 +45,6 @@ impl WasmRunner {
             instance,
             i: 0,
             returned_end: false,
-            last_frame_send: None,
         })
     }
 }
@@ -97,15 +91,6 @@ impl Iterator for WasmRunner {
         let view = memory.view(&self.store);
         view.read(1, img.as_mut_slice()).unwrap();
 
-        let now = Instant::now();
-        if let Some(last_frame) = self.last_frame_send {
-            let frame_delta: Duration = now - last_frame;
-            if frame_delta < FRAME_DURATION {
-                thread::sleep(FRAME_DURATION - frame_delta);
-            }
-        }
-        self.last_frame_send = Some(now);
-
         // Write the image out
         return Some(Ok(Event::default()
             .event("screen_update")
@@ -120,15 +105,16 @@ async fn render(
     // Worker hits /render
     // Expecting an event stream response
     // Each event is an image to render, e.g.
+    //
     // event: screen_update
     // data: <the base64-encoded image data>
+    //
+    // And then it ends with:
+    // event: end
+    //
 
     let runner = WasmRunner::new_from_wasm(&payload.wasm).unwrap();
-    let stream = tokio_stream::iter(runner);
+    let stream = tokio_stream::iter(runner).throttle(FRAME_DURATION);
 
-    Sse::new(stream).keep_alive(
-        axum::response::sse::KeepAlive::new()
-            .interval(Duration::from_secs(1))
-            .text("keep-alive-text"),
-    )
+    Sse::new(stream)
 }
