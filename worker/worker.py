@@ -148,6 +148,11 @@ def consume_server_side_events():
         )
         assert response.ok
         for event in sseclient.SSEClient(response).events():
+            # we get 'keep-alive' events from the server, which are nice, sure,
+            # but they are defffffffinitely not something we want to queue or care
+            # about!!!
+            if event.event == "keep-alive":
+                continue
             print("consume_server_side_events event", event)
             SERVER_SIDE_EVENTS_QUEUE.put(event)
         time.sleep(1)
