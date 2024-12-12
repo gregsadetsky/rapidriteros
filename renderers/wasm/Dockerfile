@@ -30,7 +30,7 @@ RUN adduser \
     --uid "${UID}" \
     "${USER}"
 
-FROM gcr.io/distroless/cc
+FROM gcr.io/distroless/cc@sha256:f913198471738d9eedcd00c0ca812bf663e8959eebff3a3cbadb027ed9da0c38
 
 # Import from builder.
 COPY --from=builder /etc/passwd /etc/passwd
