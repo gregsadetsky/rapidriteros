@@ -35,7 +35,7 @@ global.window.requestAnimationFrame = (callback) => {
 
 const p5 = require("p5");
 
-const { setup: userSetup, draw: userDraw } = eval(`(function() {
+const { setup: userSetup, draw: userDraw, preload: userPreload } = eval(`(function() {
     ${PROGRAM}
     return {
       setup: (typeof setup === 'function') ? setup : function() {},
@@ -48,18 +48,22 @@ const { setup: userSetup, draw: userDraw } = eval(`(function() {
 let canvas = null;
 
 const inst = new p5((p) => {
+  // add every property found on p onto global
+  for (let prop in p) {
+    if (typeof p[prop] === "function") {
+      // SUPER important to rebind any function to the original p
+      global[prop] = p[prop].bind(p);
+    } else {
+      global[prop] = p[prop];
+    }
+  }
+
+  p.preload = function () {
+    userPreload();
+  }
+  
   p.setup = function () {
     canvas = p.createCanvas(96, 38);
-
-    // add every property found on p onto global
-    for (let prop in p) {
-      if (typeof p[prop] === "function") {
-        // SUPER important to rebind any function to the original p
-        global[prop] = p[prop].bind(p);
-      } else {
-        global[prop] = p[prop];
-      }
-    }
 
     userSetup();
   };
