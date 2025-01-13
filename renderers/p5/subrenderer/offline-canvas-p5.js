@@ -39,7 +39,8 @@ const { setup: userSetup, draw: userDraw } = eval(`(function() {
     ${PROGRAM}
     return {
       setup: (typeof setup === 'function') ? setup : function() {},
-      draw: (typeof draw === 'function') ? draw : function() {}
+      draw: (typeof draw === 'function') ? draw : function() {},
+      preload: (typeof preload === 'function') ? preload : function() {}
     };
   })()
 `);
