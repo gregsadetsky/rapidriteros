@@ -20,6 +20,7 @@ global.HTMLCanvasElement = global.window.HTMLCanvasElement;
 // override DOMPoint
 global.DOMPoint = global.window.DOMPoint;
 global.Event = global.window.Event;
+global.Image = global.window.Image;
 
 const startTime = Date.now();
 const RUN_PROGRAM_FOR_SECONDS = 30;
