@@ -157,16 +157,18 @@ def consume_server_side_events():
             SERVER_SIDE_EVENTS_QUEUE.put(event)
         time.sleep(1)
 
+def get_all_shows():
+    # fetch all shows from the web microservice
+    r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
+    json_response = r.json()
+    return json_response["shows"]
 
 def worker():
     while True:
         log.info("worker loop")
 
-        # fetch all shows from the web microservice
-        r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
-        json_response = r.json()
-        all_shows = json_response["shows"]
 
+        all_shows = get_all_shows()
         for show in all_shows:
             print("show type", show["show_type"])
             print("show", json.dumps(show)[:100], "...")
@@ -189,6 +191,8 @@ def worker():
                     if event.event == "show_immediately":
                         show_id = json.loads(event.data)["show_id"]
                         print(f"IMMEDIATELY JUMPING TO SHOW {show_id}")
+                        # Load all the shows again in case they just added it! Helps with _rapid_ prototyping
+                        all_shows = get_all_shows()
                         filtered_shows = [
                             show for show in all_shows if show["id"] == show_id
                         ]

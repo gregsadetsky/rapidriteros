@@ -21,7 +21,7 @@ the rapidriter/raspberry pi are hosted + deployed + managed using [disco](https:
 - huge thanks to [Antoine Leclair](https://github.com/antoineleclair/) for his help in architecturing and all things async!
 - thanks to [MaxD](https://github.com/maxdee) who retrofit the display so that it would accept frames over UDP at over 40fps!
 - thanks to [Jesse Chen](https://github.com/jessechen) for the custom pixel font aka "bubbletea"! More info in [the font's repo](https://github.com/jessechen/bubbletea)!
-- thanks to [Brandon Sprague](https://github.com/bcspragu) for the WASM renderer!
+- thanks to [Brandon Sprague](https://github.com/bcspragu) for the WASM renderer!!
 
 ---
 
@@ -136,3 +136,4 @@ docker run \
   --name=rrwasm \
   rapidriteros/wasm
 ```
+
