@@ -29,11 +29,11 @@ WEB_SERVICE_HOST = os.environ["WEB_SERVICE_HOST"]
 
 RENDERER_URLS = {
     "text": os.environ["RENDERER_TEXT_HOST"] + "/render",
-    "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
     "p5": os.environ["RENDERER_P5_HOST"] + "/render",
     "shader": os.environ["RENDERER_SHADER_HOST"] + "/render",
     "wasm": os.environ["RENDERER_WASM_HOST"] + "/render",
     # ---
+    # "osc": os.environ["RENDERER_OSC_HOST"] + "/render",
     # "noise": "http://renderernoise/render",
     # "image": "http://rendererimage/render",
 }
@@ -157,16 +157,17 @@ def consume_server_side_events():
             SERVER_SIDE_EVENTS_QUEUE.put(event)
         time.sleep(1)
 
+
 def get_all_shows():
     # fetch all shows from the web microservice
     r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
     json_response = r.json()
     return json_response["shows"]
 
+
 def worker():
     while True:
         log.info("worker loop")
-
 
         all_shows = get_all_shows()
         for show in all_shows:
@@ -187,52 +188,30 @@ def worker():
                 except queue.Empty:
                     pass
 
-                if event:
-                    if event.event == "show_immediately":
-                        show_id = json.loads(event.data)["show_id"]
-                        print(f"IMMEDIATELY JUMPING TO SHOW {show_id}")
-                        # Load all the shows again in case they just added it! Helps with _rapid_ prototyping
-                        all_shows = get_all_shows()
-                        filtered_shows = [
-                            show for show in all_shows if show["id"] == show_id
-                        ]
-                        assert len(filtered_shows) == 1, "did not find show??"
-                        show = filtered_shows[0]
-                        # and immediately show show!!!
-                        for frame in receive_frames_from_renderer(
-                            show["show_type"], json_payload=show["payload"]
-                        ):
-                            # we're now locked in the interrupting show
-                            # i.e. you can't interrupt an interrupting show
-                            # with another show!
-                            send_frame_to_display(frame)
+                if event and event.event == "show_immediately":
+                    show_id = json.loads(event.data)["show_id"]
+                    print(f"IMMEDIATELY JUMPING TO SHOW {show_id}")
+
+                    # Load all the shows again in case they just added it! Helps with _rapid_ prototyping
+                    all_shows = get_all_shows()
+                    filtered_shows = [
+                        show for show in all_shows if show["id"] == show_id
+                    ]
+                    assert len(filtered_shows) == 1, "did not find show??"
+                    show = filtered_shows[0]
+                    # and immediately show show!!!
+                    for frame in receive_frames_from_renderer(
+                        show["show_type"], json_payload=show["payload"]
+                    ):
+                        # we're now locked in the interrupting show
+                        # i.e. you can't interrupt an interrupting show
+                        # with another show!
+                        send_frame_to_display(frame)
 
                     # break out of the show that we originally interrupted
                     # so that we don't go through all of the accumulated frames that happened
                     # while we were showing the osc/immediate show frames
                     break
-
-                # # this is BANANAS, but let's see if we should interrupt this program
-                # # and immediately switch to OSC mode...
-                # r = requests.get(
-                #     WEB_SERVICE_HOST + "/internalapi/get_immediately_show_osc"
-                # )
-                # json_response = r.json()
-                # if json_response["immediately_show_osc"]:
-                #     # unset it immediately! yes, that's weird!
-                #     requests.get(
-                #         WEB_SERVICE_HOST + "/internalapi/unset_immediately_show_osc"
-                #     )
-
-                #     # and immediately show osc!!!
-                #     for frame in receive_frames_from_renderer("osc", json_payload={}):
-                #         # we processed 1 frame, we can do other things now
-                #         send_frame_to_display(frame)
-
-                #     # break out of the current show that we interrupted
-                #     # so that we don't go through all of the accumulated frames that happened
-                #     # while we were showing the osc frames
-                #     break
 
             time.sleep(1)
 

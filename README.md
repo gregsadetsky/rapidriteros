@@ -22,6 +22,7 @@ the rapidriter/raspberry pi are hosted + deployed + managed using [disco](https:
 - thanks to [MaxD](https://github.com/maxdee) who retrofit the display so that it would accept frames over UDP at over 40fps!
 - thanks to [Jesse Chen](https://github.com/jessechen) for the custom pixel font aka "bubbletea"! More info in [the font's repo](https://github.com/jessechen/bubbletea)!
 - thanks to [Brandon Sprague](https://github.com/bcspragu) for the WASM renderer!!
+- thanks to [Jakub Sygnowski](https://github.com/sygi) for help restoring the rapidriter raspi sd card, debugging, extending the p5 renderer, and the upcoming raspi ssd upgrade!
 
 ---
 
@@ -60,7 +61,15 @@ python p5.py
 
 - other renderers might require `npm install`, etc.
 
-## Running everything in Docker
+---
+
+### renderer notes
+
+- the p5 renderer needs node v22
+
+---
+
+### Running everything in Docker
 
 1. Create a bridge network with `docker network create rapidriter`
 

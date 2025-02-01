@@ -28,10 +28,7 @@ class Show(models.Model):
     disabled = models.BooleanField(default=False)
 
 
-KV_DEFAULTS = {
-    "immediately_show_osc": False,
-    "immediately_show_show": None,
-}
+KV_DEFAULTS = {}
 
 
 class KV(models.Model):

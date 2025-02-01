@@ -35,8 +35,17 @@ global.window.requestAnimationFrame = (callback) => {
 
 const p5 = require("p5");
 
-const { setup: userSetup, draw: userDraw, preload: userPreload } = eval(`(function() {
+const {
+  setup: userSetup,
+  draw: userDraw,
+  preload: userPreload,
+} = eval(`(function() {
+    // nop
+    var console = {log: function() {}};
+    var createCanvas = function() {};
+
     ${PROGRAM}
+
     return {
       setup: (typeof setup === 'function') ? setup : function() {},
       draw: (typeof draw === 'function') ? draw : function() {},
@@ -47,7 +56,7 @@ const { setup: userSetup, draw: userDraw, preload: userPreload } = eval(`(functi
 
 let canvas = null;
 
-const inst = new p5((p) => {
+function copyPPropsToGlobal(p) {
   // add every property found on p onto global
   for (let prop in p) {
     if (typeof p[prop] === "function") {
@@ -57,13 +66,22 @@ const inst = new p5((p) => {
       global[prop] = p[prop];
     }
   }
+}
 
+const inst = new p5((p) => {
   p.preload = function () {
+    // must copy props to global so that `loadImage` is available
+    copyPPropsToGlobal(p);
+
     userPreload();
-  }
-  
+  };
+
   p.setup = function () {
     canvas = p.createCanvas(96, 38);
+
+    // after creating the canvas, `p` will set `width`, `height` and...
+    // other globals..? so copy them once again to the globals.
+    copyPPropsToGlobal(p);
 
     userSetup();
   };

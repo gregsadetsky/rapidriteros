@@ -5,11 +5,8 @@ from core.views import (
     add_show,
     delete_show,
     get_all_shows,
-    get_immediately_show_osc,
     index,
-    set_immediately_show_osc,
     set_immediately_show_show,
-    unset_immediately_show_osc,
 )
 
 urlpatterns = [
@@ -24,24 +21,11 @@ urlpatterns = [
         name="set_immediately_show_show",
     ),
     path("internalapi/get_all_shows", get_all_shows, name="get_all_shows"),
+    # the worker connects to internalapi/events to be informed of
+    # shows to be immediately shown
     path(
         "internalapi/events",
         include(django_eventstream.urls),
         {"channels": ["events"]},
     ),
-    # path(
-    #     "internalapi/set_immediately_show_osc",
-    #     set_immediately_show_osc,
-    #     name="set_immediately_show_osc",
-    # ),
-    # path(
-    #     "internalapi/get_immediately_show_osc",
-    #     get_immediately_show_osc,
-    #     name="get_immediately_show_osc",
-    # ),
-    # path(
-    #     "internalapi/unset_immediately_show_osc",
-    #     unset_immediately_show_osc,
-    #     name="unset_immediately_show_osc",
-    # ),
 ]
