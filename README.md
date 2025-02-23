@@ -23,7 +23,7 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 - thanks to [Jesse Chen](https://github.com/jessechen) for the custom pixel font aka "bubbletea"! More info in [the font's repo](https://github.com/jessechen/bubbletea)!
 - thanks to [Brandon Sprague](https://github.com/bcspragu) for the WASM renderer!
 - thanks to [Jakub Sygnowski](https://github.com/sygi) for help restoring the rapidriter raspi sd card, debugging, extending the p5 renderer, and the upcoming raspi ssd upgrade!
-- thanks to [Stephen Downward](https://www.scd31.com/) for his contributions re Rust / WASM template and for creating a local simulator - [available here](https://gitlab.scd31.com/stephen/rapidriter-cat)!
+- thanks to [Stephen D](https://www.scd31.com/) for his contributions re Rust / WASM template and for creating a local simulator - [available here](https://gitlab.scd31.com/stephen/rapidriter-cat)!
 
 ---
 
