@@ -14,7 +14,7 @@ this repo/software runs on a connected raspberry pi and goes through "shows" i.e
 
 (this repo) also presents a django-based web UI so that people can add/edit shows. that is mostly a work in progress.
 
-the rapidriter/raspberry pi are hosted + deployed + managed using [disco](https://letsdisco.dev/)
+the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/)
 
 ## thanks
 
@@ -23,10 +23,13 @@ the rapidriter/raspberry pi are hosted + deployed + managed using [disco](https:
 - thanks to [Jesse Chen](https://github.com/jessechen) for the custom pixel font aka "bubbletea"! More info in [the font's repo](https://github.com/jessechen/bubbletea)!
 - thanks to [Brandon Sprague](https://github.com/bcspragu) for the WASM renderer!!
 - thanks to [Jakub Sygnowski](https://github.com/sygi) for help restoring the rapidriter raspi sd card, debugging, extending the p5 renderer, and the upcoming raspi ssd upgrade!
+- thanks to [Stephen Downward](https://www.scd31.com/) for his contributions re Rust / WASM template and for creating a local simulator - [available here](https://gitlab.scd31.com/stephen/rapidriter-cat)!!
 
 ---
 
-## how to start / run locally
+<details>
+
+<summary>how to start / run locally</summary>
 
 ### pre-setup
 
@@ -61,15 +64,12 @@ python p5.py
 
 - other renderers might require `npm install`, etc.
 
----
+</details>
 
-### renderer notes
 
-- the p5 renderer needs node v22
+<details>
 
----
-
-### Running everything in Docker
+<summary>Running everything in Docker</summary>
 
 1. Create a bridge network with `docker network create rapidriter`
 
@@ -146,3 +146,10 @@ docker run \
   rapidriteros/wasm
 ```
 
+</details>
+
+---
+
+### renderer notes
+
+- the p5 renderer needs node v22 (`nvm use` should work)
