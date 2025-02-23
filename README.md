@@ -10,7 +10,7 @@ the "Rapid Riter" is a LED display from the 1980s (the copyright on the PCB says
 
 the display is currently installed at the [Recurse Center](https://www.recurse.com/)
 
-this repo/software runs on a connected raspberry pi and goes through "shows" i.e. text, [p5.js](https://p5js.org/) scripts, and GLSL shaders, and renders them all on the LED display
+this repo/software runs on a connected raspberry pi and goes through "shows" i.e. text, [p5.js](https://p5js.org/) scripts, GLSL shaders, WASM programs, and renders them all on the LED display
 
 (this repo) also presents a django-based web UI so that people can add/edit shows. that is mostly a work in progress.
 
@@ -153,3 +153,16 @@ docker run \
 ### renderer notes
 
 - the p5 renderer needs node v22 (`nvm use` should work)
+
+### things that have not been tried / ideas / sort of brainstorm
+
+- I (Greg) don't exactly know what the display frame rate is. from my sort of tests, it's somewhere around 40 fps. figuring this out could be useful!
+- TODO greg - add firmware code from Max D and photos from conversion of the riter from its original form to its current form into this repo (this might also help with the frame rate question)
+- PWM would be really fascinating to get working... my initial tests led to some wonky/not satisfying results... maybe you can crack it..???
+- not a lot of shows use network requests (at least one does, but that's it) - that could be something interesting to play with for future shows
+- the wasm renderer - as far as I know/understand - would not allow you to do network calls right now (I could be wrong). it would be great if that was possible, as it is possible with the p5 renderer
+- it could be cool if a webcam was filming the riter and streaming it for others to see outside the hub... (but obviously not film people around it)
+- what if there were usb joysticks attached to the raspberry pi that the renderers would have access to?? you could sort of do interactive shows right now with a renderer that used network requests.... 
+- a tixy.land mode would be great! a python mode would be great as well! and a gif mode! and a youtube mode!
+- a mic mode could be great that could do audio reactive stuff??
+- maybe a speaker (whose volume could be turned down) for some audio output?
