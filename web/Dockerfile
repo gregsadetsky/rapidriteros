@@ -5,7 +5,7 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install -r requirements.txt
 
-RUN pip install --no-compile --no-cache-dir magic-wormhole==0.13.0
+RUN pip install --no-compile --no-cache-dir magic-wormhole
 
 # copy rest of code, rest is executed only if code changed
 COPY . /code
