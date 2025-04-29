@@ -1,5 +1,3 @@
-import json
-
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django_eventstream import send_event
@@ -13,6 +11,11 @@ def index(request):
 
 
 def delete_show(request, show_id):
+    # FIXME LATER
+    # FIXME LATER
+    # FIXME LATER
+    return HttpResponse("no")
+
     Show.objects.filter(id=show_id).delete()
     return redirect("index")
 
@@ -38,5 +41,10 @@ def get_all_shows(request):
 
 
 def set_immediately_show_show(request, show_id):
+    # FIXME LATER
+    # FIXME LATER
+    # FIXME LATER
+    return HttpResponse("no")
+
     send_event("events", "show_immediately", {"show_id": show_id})
     return redirect("index")
