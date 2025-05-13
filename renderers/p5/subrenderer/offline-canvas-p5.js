@@ -23,7 +23,7 @@ global.Event = global.window.Event;
 global.Image = global.window.Image;
 
 const startTime = Date.now();
-const RUN_PROGRAM_FOR_SECONDS = 30;
+const RUN_PROGRAM_FOR_SECONDS = 300;
 
 // this determines how long our program runs!!!
 global.window.requestAnimationFrame = (callback) => {
