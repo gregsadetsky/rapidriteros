@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Cookies from 'js-cookie';
 import "./App.css";
 
 interface Show {
@@ -9,10 +10,21 @@ interface Show {
   display_text: string;
 }
 
+interface ShowDetail {
+  id: number;
+  show_type: string;
+  payload: any;
+  created_at: string;
+  disabled: boolean;
+}
+
 function App() {
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editingShow, setEditingShow] = useState<ShowDetail | null>(null);
+  const [editingPayload, setEditingPayload] = useState<string>("");
+  const [loadingShow, setLoadingShow] = useState(false);
 
   const fetchShows = () => {
     fetch('/api/shows')
@@ -86,11 +98,73 @@ function App() {
     }
   };
 
+  const editShow = async (showId: number) => {
+    setLoadingShow(true);
+    try {
+      const response = await fetch(`/api/shows/${showId}`, {
+        headers: {
+          'X-CSRFToken': getCsrfToken(),
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch show details');
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setEditingShow(data.show);
+        const showTypeContent = data.show.payload[data.show.show_type] || '';
+        setEditingPayload(typeof showTypeContent === 'string' ? showTypeContent : JSON.stringify(showTypeContent, null, 2));
+      }
+    } catch (err) {
+      console.error('Error fetching show details:', err);
+    } finally {
+      setLoadingShow(false);
+    }
+  };
+
+  const closeEditor = () => {
+    setEditingShow(null);
+    setEditingPayload("");
+  };
+
+  const saveShow = async () => {
+    if (!editingShow) return;
+
+    try {
+      // Create payload object with show type as key
+      const payloadToSave = {
+        [editingShow.show_type]: editingPayload
+      };
+
+      const response = await fetch(`/api/shows/${editingShow.id}/save`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify(payloadToSave),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save show');
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        // Close editor and refresh shows list
+        closeEditor();
+        fetchShows();
+      }
+    } catch (err) {
+      console.error('Error saving show:', err);
+      alert('Failed to save show. Please try again.');
+    }
+  };
+
   const getCsrfToken = () => {
-    const cookie = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('csrftoken='));
-    return cookie ? cookie.split('=')[1] : '';
+    return Cookies.get('csrftoken') || '';
   };
 
   useEffect(() => {
@@ -108,6 +182,68 @@ function App() {
       <div className="text-lg text-red-600">Error: {error}</div>
     </div>
   );
+
+  if (editingShow) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Show</h1>
+          
+          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  editingShow.show_type === 'text' ? 'bg-purple-100 text-purple-800' :
+                  editingShow.show_type === 'p5' ? 'bg-orange-100 text-orange-800' :
+                  editingShow.show_type === 'shader' ? 'bg-cyan-100 text-cyan-800' :
+                  editingShow.show_type === 'wasm' ? 'bg-pink-100 text-pink-800' :
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  {editingShow.show_type}
+                </span>
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${editingShow.disabled 
+                    ? 'bg-gray-200 text-gray-600' 
+                    : 'bg-green-100 text-green-800'
+                  }`}>
+                  {editingShow.disabled ? 'Disabled' : 'Enabled'}
+                </span>
+              </div>
+              <p className="text-sm text-gray-500">
+                Created: {new Date(editingShow.created_at).toLocaleString()}
+              </p>
+            </div>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Payload (JSON)
+              </label>
+              <textarea
+                value={editingPayload}
+                onChange={(e) => setEditingPayload(e.target.value)}
+                className="w-full h-96 p-3 border border-gray-300 rounded-md font-mono text-sm resize-y"
+                placeholder="Enter JSON payload..."
+              />
+            </div>
+            
+            <div className="flex gap-2">
+              <button 
+                onClick={closeEditor}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={saveShow}
+                className="px-4 py-2 bg-green-200 hover:bg-green-300 text-green-800 rounded-md transition-colors cursor-pointer"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -140,7 +276,12 @@ function App() {
                   </span>
                 </div>
                 
-                <p className="text-gray-900 font-medium mb-2">{show.display_text}</p>
+                <button 
+                  onClick={() => editShow(show.id)}
+                  className="text-left text-gray-900 font-medium mb-2 underline hover:text-blue-600 transition-colors cursor-pointer"
+                >
+                  {show.display_text}
+                </button>
                 <p className="text-sm text-gray-500 mb-4">
                   Created: {new Date(show.created_at).toLocaleString()}
                 </p>
@@ -150,7 +291,7 @@ function App() {
                     onClick={() => setShowDisabled(show.id, !show.disabled)}
                     className={`px-3 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${show.disabled
                         ? 'bg-green-200 hover:bg-green-300 text-green-800'
-                        : 'bg-red-200 hover:bg-red-300 text-red-800'
+                        : 'bg-purple-200 hover:bg-purple-300 text-purple-800'
                       }`}
                   >
                     {show.disabled ? 'Enable' : 'Disable'}

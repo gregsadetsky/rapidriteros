@@ -4,6 +4,8 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User
 from .models import KV, Show
 
+admin.site.site_header = 'Rapid Riter Admin'
+
 admin.site.register(User, UserAdmin)
 
 class ShowAdmin(admin.ModelAdmin):

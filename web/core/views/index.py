@@ -8,17 +8,11 @@ from core.views.oauth.utils import get_rc_oauth
 
 
 def index_react(request):
-    return render(request, "core/index_react.html")
-
-
-def index(request):
     if not request.user.is_authenticated:
         return get_rc_oauth().authorize_redirect(
             request, settings.RC_OAUTH_REDIRECT_URI
         )
-
-    all_shows = Show.objects.all().order_by("created_at")
-    return render(request, "core/list_of_shows.html", {"all_shows": all_shows})
+    return render(request, "core/index_react.html")
 
 
 def delete_show(request, show_id):

@@ -5,7 +5,6 @@ from core.views.index import (
     add_show,
     delete_show,
     get_all_shows,
-    index,
     set_immediately_show_show,
 )
 
@@ -15,8 +14,7 @@ from core.views.index import index_react
 from core.views.api import api
 
 urlpatterns = [
-    path("", index, name="index"),
-    path("react", index_react, name="index_react"),
+    path("", index_react, name="index_react"),
     path("api/", api.urls),
     path("oauth_redirect", oauth_redirect, name="oauth_redirect"),
     # paths below are once logged in
