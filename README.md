@@ -33,8 +33,12 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 
 ### pre-setup
 
+- clone this repo
 - make a copy of `web/.env.example` into `web/.env`
 - make a copy of `worker/.env.example` into `worker/.env`
+- the first time, go into `web`, create a `venv`, and run `pip install -r requirements.txt`
+- do the same in the `worker` directory (venv, install req's)
+- in the web directory, run `python manage.py migrate`
 
 ### run
 
@@ -55,6 +59,7 @@ python worker.py
 ```
 
 - start a renderer, for example p5js:
+  - this assumes that you've created a `venv` + `pip install`ed, and also ran npm install within `p5/subrenderer`
 
 ```bash
 cd renderers/p5
@@ -153,6 +158,7 @@ docker run \
 ### renderer notes
 
 - the p5 renderer needs node v22 (`nvm use` should work)
+  - you might also need to run `brew install pkgconf` in the `subrenderer` directory
 
 ### things that have not been tried / ideas / sort of brainstorm
 

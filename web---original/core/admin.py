@@ -1,10 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-
-from .models import User
 from .models import KV, Show
-
-admin.site.register(User, UserAdmin)
 
 class ShowAdmin(admin.ModelAdmin):
     list_display = ("created_at", "show_type", "payload", "disabled")

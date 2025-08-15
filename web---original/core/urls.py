@@ -1,5 +1,5 @@
-from django.urls import include, path
 import django_eventstream
+from django.urls import include, path
 
 from core.views import (
     add_show,
@@ -8,12 +8,6 @@ from core.views import (
     index,
     set_immediately_show_show,
 )
-
-# from core.views import index, index_react
-# urlpatterns = [
-#     path("", index, name="index"),
-#     path("react", index_react, name="index_react"),
-# ]
 
 urlpatterns = [
     path("", index, name="index"),

@@ -5,18 +5,9 @@ from django_eventstream import send_event
 from .models import Show
 
 
-# def index(request):
-#     return render(request, "core/index.html")
-
-
-# def index_react(request):
-#     return render(request, "core/index_react.html")
-
-
-
 def index(request):
     all_shows = Show.objects.all().order_by("created_at")
-    return render(request, "core/list_of_shows.html", {"all_shows": all_shows})
+    return render(request, "index.html", {"all_shows": all_shows})
 
 
 def delete_show(request, show_id):
