@@ -133,7 +133,7 @@ function App() {
                     {show.show_type}
                   </span>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${show.disabled 
-                      ? 'bg-red-100 text-red-800' 
+                      ? 'bg-gray-200 text-gray-600' 
                       : 'bg-green-100 text-green-800'
                     }`}>
                     {show.disabled ? 'Disabled' : 'Enabled'}
@@ -145,15 +145,23 @@ function App() {
                   Created: {new Date(show.created_at).toLocaleString()}
                 </p>
                 
-                <button 
-                  onClick={() => setShowDisabled(show.id, !show.disabled)}
-                  className={`px-3 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${show.disabled
-                      ? 'bg-green-200 hover:bg-green-300 text-green-800'
-                      : 'bg-red-200 hover:bg-red-300 text-red-800'
-                    }`}
-                >
-                  {show.disabled ? 'Enable' : 'Disable'}
-                </button>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setShowDisabled(show.id, !show.disabled)}
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${show.disabled
+                        ? 'bg-green-200 hover:bg-green-300 text-green-800'
+                        : 'bg-red-200 hover:bg-red-300 text-red-800'
+                      }`}
+                  >
+                    {show.disabled ? 'Enable' : 'Disable'}
+                  </button>
+                  <button 
+                    onClick={() => deleteShow(show.id)}
+                    className="px-3 py-1 rounded text-xs font-medium transition-colors cursor-pointer bg-red-100 hover:bg-red-200 text-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
