@@ -7,7 +7,11 @@ from .models import KV, Show
 admin.site.register(User, UserAdmin)
 
 class ShowAdmin(admin.ModelAdmin):
-    list_display = ("created_at", "show_type", "payload", "disabled")
+    list_display = ("created_at", "show_type", "abbreviated_payload", "disabled")
+    
+    def abbreviated_payload(self, obj):
+        return str(obj)
+    abbreviated_payload.short_description = "Payload"
     actions = ['bulk_disable', 'bulk_enable']
     
     def bulk_disable(self, request, queryset):

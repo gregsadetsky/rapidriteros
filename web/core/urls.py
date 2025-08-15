@@ -12,10 +12,12 @@ from core.views.index import (
 from core.views.oauth.oauth_redirect import oauth_redirect
 
 from core.views.index import index_react
+from core.views.api import api
 
 urlpatterns = [
     path("", index, name="index"),
     path("react", index_react, name="index_react"),
+    path("api/", api.urls),
     path("oauth_redirect", oauth_redirect, name="oauth_redirect"),
     # paths below are once logged in
     path("add_show", add_show, name="add_show"),
