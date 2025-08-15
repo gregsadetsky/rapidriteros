@@ -7,13 +7,8 @@ from core.models import Show
 from core.views.oauth.utils import get_rc_oauth
 
 
-# def index(request):
-#     return render(request, "core/index.html")
-
-
-# def index_react(request):
-#     return render(request, "core/index_react.html")
-
+def index_react(request):
+    return render(request, "core/index_react.html")
 
 
 def index(request):
