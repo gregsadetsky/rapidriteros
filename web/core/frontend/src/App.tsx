@@ -33,7 +33,6 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [editingShow, setEditingShow] = useState<ShowDetail | null>(null);
   const [editingPayload, setEditingPayload] = useState<string>("");
-  const [loadingShow, setLoadingShow] = useState(false);
   const [addingShow, setAddingShow] = useState(false);
   const [selectedShowType, setSelectedShowType] = useState<string | null>(null);
   const [newShowContent, setNewShowContent] = useState<string>("");
@@ -111,7 +110,6 @@ function App() {
   };
 
   const editShow = async (showId: number) => {
-    setLoadingShow(true);
     try {
       const response = await fetch(`/api/shows/${showId}`, {
         headers: {
@@ -131,8 +129,6 @@ function App() {
       }
     } catch (err) {
       console.error('Error fetching show details:', err);
-    } finally {
-      setLoadingShow(false);
     }
   };
 

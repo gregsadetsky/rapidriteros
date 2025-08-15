@@ -64,31 +64,29 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showType }) => {
         return {
           title: "WASM Show Notes",
           content: (
-            <div>
-              <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border">
-                <p className="mb-2">HOW TO WASM:</p>
-                <p className="mb-1">
-                  - Paste your{' '}
-                  <a 
-                    href="https://developer.mozilla.org/en-US/docs/WebAssembly/Understanding_the_text_format"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 underline"
-                  >
-                    WebAssembly Text (WAT)
-                  </a>
-                  {' '}file here
-                </p>
-                <pre className="whitespace-pre-wrap">
+            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border">
+              <p className="mb-2">HOW TO WASM:</p>
+              <p className="mb-1">
+                - Paste your{' '}
+                <a 
+                  href="https://developer.mozilla.org/en-US/docs/WebAssembly/Understanding_the_text_format"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline"
+                >
+                  WebAssembly Text (WAT)
+                </a>
+                {' '}file here
+              </p>
+              <pre className="whitespace-pre-wrap mb-2">
 {`- implement a next_frame function with the signature: next_frame(frame: u16, ptr: *mut u8) -> u8
     - first input is the current (zero-indexed) frame
     - second input is a pointer to the 456-byte array
     - return value is zero if you have more frames to render, one if you're done rendering things
       - But you only get 100 frames, don't be greedy!`}
-                </pre>
-              </div>
-              <p className="text-sm text-gray-600 mt-2">
-                See{' '}
+              </pre>
+              <p>
+                - See{' '}
                 <a 
                   href="https://git.sr.ht/~bsprague/recurse/tree/main/item/rapidriter/simpletest"
                   target="_blank"
