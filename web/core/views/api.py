@@ -39,6 +39,36 @@ def delete_show(request, show_id: int):
     except Show.DoesNotExist:
         return {'success': False, 'error': 'Show not found'}
 
+@api.post("/create-show", auth=django_auth)
+def create_show(request):
+    try:
+        import json
+        data = json.loads(request.body)
+        
+        show_type = data.get('show_type')
+        content = data.get('content')
+        
+        if not show_type or not content:
+            return {'success': False, 'error': 'Missing show_type or content'}
+        
+        if show_type not in ['text', 'p5', 'shader', 'wasm']:
+            return {'success': False, 'error': 'Invalid show_type'}
+        
+        # Create payload with show_type as key
+        payload = {show_type: content}
+        
+        # Create new show
+        show = Show.objects.create(
+            show_type=show_type,
+            payload=payload
+        )
+        
+        return {'success': True, 'show_id': show.id}
+    except json.JSONDecodeError:
+        return {'success': False, 'error': 'Invalid JSON'}
+    except Exception as e:
+        return {'success': False, 'error': str(e)}
+
 @api.get("/shows/{show_id}", auth=django_auth)
 def get_show_detail(request, show_id: int):
     try:
