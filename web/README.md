@@ -1,63 +1,34 @@
-# Django project rapidriter
+# Example disco Django Site
 
-Hi! This is the Django source for rapidriter.
+[See the documentation here](https://docs.letsdisco.dev/deployment-guides/django)
 
-## TODO
+---
 
-If you followed the [Minimalish Django starter](https://github.com/gregsadetsky/minimalish-django-starter) instructions, you still have a couple of steps to go to make a thing that lives on the internet.
+## how to run locally
 
-next:
+### first time
 
-- fill out the values in the `.env` file
-- make sure your venv is still active, otherwise `source venv/bin/activate`
-- run `python manage.py migrate`
-- start the server with `python manage.py runserver`
-- go to http://localhost:8000/ and do good work!
-- to see the vite/react index page, head to http://localhost:8000/react
-  - the frontend TypeScript code is under `core/frontend/src/`
+- make a copy of the `.env.example` file and call the copy `.env`
+- fill out the `DJANGO_SECRET_KEY` value in `.env` with a random secret-ish string
+- then, run:
 
-to deploy using disco, create a new github repo with your new directory, and refer to the [disco Django+SQLite docs](https://docs.letsdisco.dev/deployment-guides/django).
-
-# Development basics
-
-## The first time
-
-To get started, navigate to the directory where this code lives. If you're downloading this code fresh, you'll need to run these commands:
-
-```
+```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+python manage.py migrate
 ```
 
-then, for the frontend piece:
+### every time
 
-```
-cd core/frontend
-npm install
-```
-
-## Every time
-
-
-Once your backend + frontend environments are setup (see above), run the following to start the project:
-
-- in one terminal, for the backend:
-
-```
+```bash
 source venv/bin/activate
 python manage.py runserver
 ```
 
-- in another terminal, for the frontend
+## notes re: running/dealing with oauth locally
 
-```
-cd core/frontend
-npm run dev
-```
-
-If you get hollered at to run some other command like `python manage.py migrate` hit Ctrl-C to stop the backend, do that and then run `python manage.py runserver` again. It's all good!
-
------
-
-[powered by Minimalish](https://github.com/gregsadetsky/minimalish-django-starter) 
+- activate the venv, then start the django server - `python manage.py runserver`
+- run ngrok - `ngrok http 8000`
+- go to https://www.recurse.com/domains and update the `rapidriter-dev.recurse.com` domain to point to the ngrok domain it `https://...ngrok-free.app`
+- update the `.env` and add the ngrok domain to `ALLOWED_HOSTS`

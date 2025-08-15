@@ -150,3 +150,7 @@ AUTH_USER_MODEL = "core.User"
 # start from default values -- so that they can be overriden later
 # https://stackoverflow.com/a/25508761
 LOGGING = DEFAULT_LOGGING
+
+RC_OAUTH_APP_ID = os.environ["RC_OAUTH_APP_ID"]
+RC_OAUTH_APP_SECRET = os.environ["RC_OAUTH_APP_SECRET"]
+RC_OAUTH_REDIRECT_URI = os.environ["RC_OAUTH_REDIRECT_URI"]

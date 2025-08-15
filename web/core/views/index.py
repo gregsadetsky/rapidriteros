@@ -1,8 +1,10 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django_eventstream import send_event
+from django.conf import settings
 
-from .models import Show
+from core.models import Show
+from core.views.oauth.utils import get_rc_oauth
 
 
 # def index(request):
@@ -15,6 +17,11 @@ from .models import Show
 
 
 def index(request):
+    if not request.user.is_authenticated:
+        return get_rc_oauth().authorize_redirect(
+            request, settings.RC_OAUTH_REDIRECT_URI
+        )
+
     all_shows = Show.objects.all().order_by("created_at")
     return render(request, "core/list_of_shows.html", {"all_shows": all_shows})
 
