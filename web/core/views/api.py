@@ -29,3 +29,12 @@ def set_show_disabled(request, show_id: int, disabled: bool):
         return {'success': True, 'disabled': show.disabled}
     except Show.DoesNotExist:
         return {'success': False, 'error': 'Show not found'}
+
+@api.post("/shows/{show_id}/delete", auth=django_auth)
+def delete_show(request, show_id: int):
+    try:
+        show = Show.objects.get(id=show_id)
+        show.delete()
+        return {'success': True}
+    except Show.DoesNotExist:
+        return {'success': False, 'error': 'Show not found'}

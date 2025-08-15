@@ -59,6 +59,33 @@ function App() {
     }
   };
 
+  const deleteShow = async (showId: number) => {
+    if (!window.confirm('Are you sure you want to delete this show? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/shows/${showId}/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken(),
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete show');
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setShows(shows.filter(show => show.id !== showId));
+      }
+    } catch (err) {
+      console.error('Error deleting show:', err);
+    }
+  };
+
   const getCsrfToken = () => {
     const cookie = document.cookie
       .split('; ')
