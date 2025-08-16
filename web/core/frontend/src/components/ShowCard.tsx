@@ -53,6 +53,12 @@ export const ShowCard: React.FC<ShowCardProps> = ({
       
       <div className="flex gap-2">
         <button 
+          onClick={() => onEdit(show.id)}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors cursor-pointer"
+        >
+          Edit
+        </button>
+        <button 
           onClick={() => onToggleDisabled(show.id, !show.disabled)}
           className={`px-3 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${show.disabled
               ? 'bg-green-200 hover:bg-green-300 text-green-800'

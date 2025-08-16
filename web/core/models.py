@@ -27,6 +27,8 @@ class Show(models.Model):
             return self.payload.get("text")
         elif self.show_type == "p5":
             return self.payload.get("p5")[0:100] + "..."
+        elif self.show_type == "shader":
+            return self.payload.get("shader")[0:100] + "..."
         elif self.show_type == "wasm":
             return self.payload.get("wasm")[0:100] + "..."
         return preamble

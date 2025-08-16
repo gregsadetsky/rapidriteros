@@ -12,13 +12,12 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showType }) => {
           title: "P5 Show Notes",
           content: (
             <pre className="text-sm text-gray-600 bg-gray-50 p-3 rounded border whitespace-pre-wrap">
-{`A FEW IMPORTANT HINTS:
+              {`- the screen dimensions are 96x38 pixels
 - don't call createCanvas() or size() functions
 - have a setup() and a main draw() function
 - do not call console.log!!
 - it's better to draw black pixels on a white background
-  - i.e. call background(0) and then fill(255)
-- i love u`}
+  - i.e. call background(255) and then fill(0)`}
             </pre>
           )
         };
@@ -26,9 +25,9 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showType }) => {
         return {
           title: "Text Show Notes",
           content: (
-            <div>
-              <pre className="text-sm text-gray-600 bg-gray-50 p-3 rounded border whitespace-pre-wrap">
-{`AVAILABLE GLYPHS:
+            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border">
+              <pre className="whitespace-pre-wrap mb-2">
+                {`AVAILABLE GLYPHS:
  !"#$%&'()*+,-./
  0123456789:;<=>?
  @ABCDEFGHIJKLMNO
@@ -36,7 +35,7 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showType }) => {
  \`abcdefghijklmno
  pqrstuvwxyz{|}~∎`}
               </pre>
-              <p className="text-sm text-gray-600 mt-2">
+              <p>
                 feel free to{' '}
                 <a 
                   href="https://recurse.zulipchat.com/#narrow/dm/7864"
@@ -79,7 +78,7 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showType }) => {
                 {' '}file here
               </p>
               <pre className="whitespace-pre-wrap mb-2">
-{`- implement a next_frame function with the signature: next_frame(frame: u16, ptr: *mut u8) -> u8
+                {`- implement a next_frame function with the signature: next_frame(frame: u16, ptr: *mut u8) -> u8
     - first input is the current (zero-indexed) frame
     - second input is a pointer to the 456-byte array
     - return value is zero if you have more frames to render, one if you're done rendering things
@@ -104,7 +103,8 @@ export const ShowNotes: React.FC<ShowNotesProps> = ({ showType }) => {
           title: "Shader Show Notes",
           content: (
             <pre className="text-sm text-gray-600 bg-gray-50 p-3 rounded border whitespace-pre-wrap">
-              Write your shader code here. Use GLSL syntax.
+              Write your shader code here. Use GLSL syntax.<br /><br />
+              Roughly speaking, have a void main(), set `gl_FragColor`, and you have access to `u_resolution.xy` and `u_time`
             </pre>
           )
         };
