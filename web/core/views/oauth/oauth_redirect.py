@@ -14,7 +14,7 @@ def oauth_redirect(request):
     except OAuthError as exception:
         if exception.error == "access_denied":
             return HttpResponse(
-                f"""looks like you denied access, that's ok. <a href="{reverse('index')}">want to try again?</a>""".encode(
+                f"""looks like you denied access, that's ok. <a href="{reverse('index_react')}">want to try again?</a>""".encode(
                     "utf-8"
                 )
             )
@@ -41,4 +41,4 @@ def oauth_redirect(request):
 
     login(request, user)
 
-    return redirect(reverse("index"))
+    return redirect(reverse("index_react"))

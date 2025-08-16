@@ -32,4 +32,4 @@ def set_immediately_show_show(request, show_id):
     return HttpResponse("no")
 
     send_event("events", "show_immediately", {"show_id": show_id})
-    return redirect("index")
+    return redirect("index_react")
