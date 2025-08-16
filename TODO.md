@@ -1,1 +1,0 @@
-- ability to run a subrenderer for a specific program and see a preview ... and its errors! example recently fixed problem: p5.js didn't have access to the fake-browser Image object. that error was easy to see from the subrenderer - how do we percolate that to the web...?
