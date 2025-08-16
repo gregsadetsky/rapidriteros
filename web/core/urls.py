@@ -2,8 +2,6 @@ from django.urls import include, path
 import django_eventstream
 
 from core.views.index import (
-    add_show,
-    delete_show,
     get_all_shows,
     set_immediately_show_show,
 )
@@ -17,10 +15,6 @@ urlpatterns = [
     path("", index_react, name="index_react"),
     path("api/", api.urls),
     path("oauth_redirect", oauth_redirect, name="oauth_redirect"),
-    # paths below are once logged in
-    path("add_show", add_show, name="add_show"),
-    # link from the web ui to delete a show
-    path("delete_show/<int:show_id>", delete_show, name="delete_show"),
     # link from the web ui to set the show immediately
     path(
         "set_immediately_show_show/<int:show_id>",

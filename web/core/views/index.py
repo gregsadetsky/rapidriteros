@@ -6,32 +6,12 @@ from django.conf import settings
 from core.models import Show
 from core.views.oauth.utils import get_rc_oauth
 
-
 def index_react(request):
     if not request.user.is_authenticated:
         return get_rc_oauth().authorize_redirect(
             request, settings.RC_OAUTH_REDIRECT_URI
         )
     return render(request, "core/index_react.html")
-
-
-def delete_show(request, show_id):
-    # FIXME LATER
-    # FIXME LATER
-    # FIXME LATER
-    return HttpResponse("no")
-
-    Show.objects.filter(id=show_id).delete()
-    return redirect("index")
-
-
-def add_show(request):
-    show_content = request.POST.get("show_content")
-    show_type = request.POST.get("show_type")
-
-    Show.objects.create(show_type=show_type, payload={show_type: show_content})
-
-    return redirect("index")
 
 
 # JSON api for the worker to get all shows as a list of dicts
