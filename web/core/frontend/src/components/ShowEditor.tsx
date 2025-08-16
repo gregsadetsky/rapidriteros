@@ -47,14 +47,14 @@ export const ShowEditor: React.FC<ShowEditorProps> = ({ show, onClose, onSave })
   const getLanguageForShowType = (showType: string) => {
     switch (showType) {
       case 'p5':
-        return languages.javascript || languages.js;
+        return { grammar: languages.javascript || languages.js, language: 'javascript' };
       case 'shader':
-        return languages.clike;
+        return { grammar: languages.clike, language: 'clike' };
       case 'text':
-        return languages.markup || languages.clike;
+        return { grammar: languages.markup || languages.clike, language: 'markup' };
       case 'wasm':
       default:
-        return languages.clike;
+        return { grammar: languages.clike, language: 'clike' };
     }
   };
 
@@ -199,7 +199,10 @@ export const ShowEditor: React.FC<ShowEditorProps> = ({ show, onClose, onSave })
               <Editor
                 value={payload}
                 onValueChange={setPayload}
-                highlight={code => highlight(code, getLanguageForShowType(show.show_type))}
+                highlight={code => {
+                  const lang = getLanguageForShowType(show.show_type);
+                  return highlight(code, lang.grammar, lang.language);
+                }}
                 padding={12}
                 style={{
                   fontFamily: '"Fira code", "Fira Mono", monospace',
