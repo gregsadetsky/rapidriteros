@@ -1,10 +1,11 @@
 import Cookies from 'js-cookie';
+import 'prismjs/themes/prism.css';
+import Prism from 'prismjs';
 import 'prismjs/components/prism-clike';
-import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-markup';
-import 'prismjs/themes/prism.css';
 import React, { useEffect, useRef, useState } from 'react';
+const { highlight, languages } = Prism;
 import Editor from 'react-simple-code-editor';
 import { renderToCanvas } from '../utils/canvas';
 import { ShowNotes } from './ShowNotes';
