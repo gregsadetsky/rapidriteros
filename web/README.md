@@ -1,8 +1,4 @@
-# Example disco Django Site
-
-[See the documentation here](https://docs.letsdisco.dev/deployment-guides/django)
-
----
+# Rapid Riter Django Web UI
 
 ## how to run locally
 
