@@ -2,7 +2,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-import sys
 import base64
 import io
 import json
@@ -122,8 +121,9 @@ def send_frame_to_display(pillow_raw_image_data):
         # and print '.' for 0 bit and '#' for 1 bit
         # clear terminal!!!!!
 
-        # print('F', end='')
-        # sys.stdout.flush()
+        # alternative, minimal-frame debugging - sometimes
+        # necessary to better see the other print output here
+        # print('F', end='', flush=True)
 
         lines = []
         for y in range(SCREEN_HEIGHT):
@@ -131,9 +131,6 @@ def send_frame_to_display(pillow_raw_image_data):
             for x in range(SCREEN_WIDTH - 1, 0, -1):
                 line += "#" if np_image[y][x] == 1 else "."
             lines.append(line)
-
-        # Move cursor to home position (0,0) instead of clearing screen
-        # This prevents the flicker from screen clear
         frame = "\033[H" + "\n".join(lines)
         print(frame, flush=True)
     else:
