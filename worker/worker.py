@@ -125,14 +125,17 @@ def send_frame_to_display(pillow_raw_image_data):
         # print('F', end='')
         # sys.stdout.flush()
 
-        print("\033c")
+        lines = []
         for y in range(SCREEN_HEIGHT):
+            line = ""
             for x in range(SCREEN_WIDTH - 1, 0, -1):
-                if np_image[y][x] == 1:
-                    print("#", end="")
-                else:
-                    print(".", end="")
-            print()
+                line += "#" if np_image[y][x] == 1 else "."
+            lines.append(line)
+
+        # Move cursor to home position (0,0) instead of clearing screen
+        # This prevents the flicker from screen clear
+        frame = "\033[H" + "\n".join(lines)
+        print(frame, flush=True)
     else:
         SCREEN_SOCK.sendto(frame_packed_bits, (SCREEN_UDP_IP, SCREEN_UDP_PORT))
 
