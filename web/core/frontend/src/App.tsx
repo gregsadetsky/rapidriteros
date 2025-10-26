@@ -102,6 +102,29 @@ function App() {
     }
   };
 
+  const showImmediately = async (showId: number) => {
+    try {
+      const response = await fetch(`/api/shows/${showId}/show_immediately`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken(),
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to show immediately');
+      }
+
+      const data = await response.json();
+      if (!data.success) {
+        console.error('Error showing immediately:', data.message);
+      }
+    } catch (err) {
+      console.error('Error showing immediately:', err);
+    }
+  }
+
   const editShow = async (showId: number) => {
     try {
       const response = await fetch(`/api/shows/${showId}`, {
@@ -236,6 +259,7 @@ function App() {
                 onEdit={editShow}
                 onToggleDisabled={setShowDisabled}
                 onDelete={deleteShow}
+                onShowImmediately={showImmediately}
               />
             ))}
           </div>

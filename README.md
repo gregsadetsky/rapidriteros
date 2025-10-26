@@ -18,12 +18,13 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 
 ## thanks
 
-- huge thanks to [Antoine Leclair](https://github.com/antoineleclair/) for his help in architecturing and all things async!
+- thanks to [Antoine Leclair](https://github.com/antoineleclair/) for his help in architecturing and all things async!
 - thanks to [MaxD](https://github.com/maxdee) who retrofit the display so that it would accept frames over UDP at over 40fps!
 - thanks to [Jesse Chen](https://github.com/jessechen) for the custom pixel font aka "bubbletea"! More info in [the font's repo](https://github.com/jessechen/bubbletea)!
 - thanks to [Brandon Sprague](https://github.com/bcspragu) for the WASM renderer!
 - thanks to [Jakub Sygnowski](https://github.com/sygi) for help restoring the rapidriter raspi sd card, debugging, extending the p5 renderer, and the upcoming raspi ssd upgrade!
 - thanks to [Stephen D](https://www.scd31.com/) for his contributions re Rust / WASM template and for creating a local simulator - [available here](https://gitlab.scd31.com/stephen/rapidriter-cat)!
+- thanks to [Florian Ragwitz](https://github.com/rafl) for their help in making the "show immediately" functionality work again, and a much needed refactoring of the main worker loop codebase!
 
 ---
 
@@ -47,7 +48,10 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 ```bash
 cd web
 source venv/bin/activate
-./bin/serve.sh
+# do not use python manage.py runserver!!!
+# do not use python manage.py runserver!!!
+./bin/serve-dev.sh
+# WARNING: this does not have autoreload on save.......!!! yet!!!!!!!
 ```
 
 - start worker

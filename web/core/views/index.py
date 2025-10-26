@@ -1,6 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
-from django_eventstream import send_event
+from django.shortcuts import redirect, render, get_object_or_404
 from django.conf import settings
 
 from core.models import Show
@@ -14,22 +13,17 @@ def index_react(request):
     return render(request, "core/index_react.html")
 
 
-# JSON api for the worker to get all shows as a list of dicts
-def get_all_shows(request):
-    all_shows = Show.objects.filter(disabled=False).order_by("created_at")
-    shows = []
+def get_show(request, show_id):
+    show = get_object_or_404(Show, id=show_id)
+    if show.disabled:
+        return JsonResponse({"error": "Show is disabled"}, status=404)
+    return JsonResponse({"show_type": show.show_type, "payload": show.payload})
+
+
+# JSON api for the worker to get all show ids (ie a list of ints)
+def get_all_show_ids(request):
+    all_shows = Show.objects.filter(disabled=False, is_preview=False).order_by("created_at")
+    show_ids = []
     for show in all_shows:
-        shows.append(
-            {"id": show.id, "show_type": show.show_type, "payload": show.payload}
-        )
-    return JsonResponse({"shows": shows})
-
-
-def set_immediately_show_show(request, show_id):
-    # FIXME LATER
-    # FIXME LATER
-    # FIXME LATER
-    return HttpResponse("no")
-
-    send_event("events", "show_immediately", {"show_id": show_id})
-    return redirect("index_react")
+        show_ids.append(show.id)
+    return JsonResponse({"show_ids": show_ids})

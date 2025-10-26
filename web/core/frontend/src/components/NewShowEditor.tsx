@@ -1,14 +1,14 @@
 import Cookies from 'js-cookie';
-import 'prismjs/themes/prism.css';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-markup';
+import 'prismjs/themes/prism.css';
 import React, { useEffect, useRef, useState } from 'react';
-const { highlight, languages } = Prism;
 import Editor from 'react-simple-code-editor';
 import { renderToCanvas } from '../utils/canvas';
 import { ShowNotes } from './ShowNotes';
+const { highlight, languages } = Prism;
 
 interface NewShowEditorProps {
   showType: string;
@@ -26,6 +26,7 @@ export const NewShowEditor: React.FC<NewShowEditorProps> = ({
   const [content, setContent] = useState<string>("");
   const [showPreview, setShowPreview] = useState(false);
   const [streamReader, setStreamReader] = useState<ReadableStreamDefaultReader<Uint8Array> | null>(null);
+  const [previewShowId, setPreviewShowId] = useState<number | null>(null);
   const isActiveRef = useRef(false);
 
   const getCsrfToken = () => {
@@ -126,6 +127,64 @@ export const NewShowEditor: React.FC<NewShowEditorProps> = ({
     }
   };
 
+  const restartPreview = async () => {
+    stopPreview();
+    // Small delay to ensure cleanup completes
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await startPreview();
+  };
+
+  const showImmediately = async () => {
+    try {
+      // First, create or update the preview show
+      const createPreviewResponse = await fetch('/api/create-or-update-preview', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({
+          show_type: showType,
+          content: content,
+          preview_show_id: previewShowId
+        })
+      });
+
+      if (!createPreviewResponse.ok) {
+        throw new Error('Failed to create preview show');
+      }
+
+      const previewData = await createPreviewResponse.json();
+      if (!previewData.success) {
+        throw new Error(previewData.error || 'Failed to create preview show');
+      }
+
+      // Save the preview show ID for reuse
+      setPreviewShowId(previewData.show_id);
+
+      // Now tell the worker to show it immediately
+      const showImmediatelyResponse = await fetch(`/api/shows/${previewData.show_id}/show_immediately`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken(),
+        },
+      });
+
+      if (!showImmediatelyResponse.ok) {
+        throw new Error('Failed to show immediately');
+      }
+
+      const showData = await showImmediatelyResponse.json();
+      if (!showData.success) {
+        throw new Error('Failed to show immediately');
+      }
+    } catch (err) {
+      console.error('Error showing immediately:', err);
+      alert('Failed to show immediately. Please try again.');
+    }
+  };
+
   const saveShow = async () => {
     if (!content.trim()) {
       alert('Please enter content for the show.');
@@ -203,16 +262,7 @@ export const NewShowEditor: React.FC<NewShowEditorProps> = ({
           </div>
           
           <div className="flex gap-2">
-            <button 
-              onClick={showPreview ? stopPreview : startPreview}
-              className={`px-4 py-2 rounded-md transition-colors cursor-pointer ${showPreview 
-                ? 'bg-red-200 hover:bg-red-300 text-red-800'
-                : 'bg-blue-200 hover:bg-blue-300 text-blue-800'
-                }`}
-            >
-              {showPreview ? 'Stop Preview' : 'Preview'}
-            </button>
-            <button 
+            <button
               onClick={() => {
                 stopPreview();
                 onCancel();
@@ -221,7 +271,22 @@ export const NewShowEditor: React.FC<NewShowEditorProps> = ({
             >
               Cancel
             </button>
-            <button 
+            <button
+              onClick={showPreview ? restartPreview : startPreview}
+              className={`px-4 py-2 rounded-md transition-colors cursor-pointer ${showPreview
+                ? 'bg-yellow-200 hover:bg-yellow-300 text-yellow-800'
+                : 'bg-blue-200 hover:bg-blue-300 text-blue-800'
+                }`}
+            >
+              {showPreview ? 'Restart Preview' : 'Preview'}
+            </button>
+            <button
+              onClick={showImmediately}
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors cursor-pointer"
+            >
+              Show Immediately
+            </button>
+            <button
               onClick={saveShow}
               className="px-4 py-2 bg-green-200 hover:bg-green-300 text-green-800 rounded-md transition-colors cursor-pointer"
             >

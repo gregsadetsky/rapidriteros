@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # to stream events to the worker
+    "django_eventstream",
     # https://github.com/MrBin99/django-vite
     "django_vite",
     "core",

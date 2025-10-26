@@ -2,17 +2,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import sys
 import base64
 import io
 import json
 import logging
 import os
-import queue
 import socket
 import threading
 import time
+import threading
+
 from datetime import datetime
 from itertools import cycle
+from collections import deque
 
 import numpy as np
 import requests
@@ -37,7 +40,6 @@ RENDERER_URLS = {
     # "noise": "http://renderernoise/render",
     # "image": "http://rendererimage/render",
 }
-ALL_RENDERERS = list(RENDERER_URLS.keys())
 
 # PROD i.e. disco on raspi
 SCREEN_UDP_IP = "10.0.0.42"
@@ -51,8 +53,8 @@ SCREEN_SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 RENDERER_CONNECT_TIMEOUT_S = 5
 RENDERER_READ_TIMEOUT_S = 5
 
-SERVER_SIDE_EVENTS_QUEUE = queue.Queue()
-
+SHOW_IDS_TO_PLAY = deque()
+SHOW_IMMEDIATELY_FLAG = threading.Event()
 
 def receive_frames_from_renderer(renderer_name, json_payload=None):
     try:
@@ -119,6 +121,10 @@ def send_frame_to_display(pillow_raw_image_data):
         # go through the lines and columns
         # and print '.' for 0 bit and '#' for 1 bit
         # clear terminal!!!!!
+
+        # print('F', end='')
+        # sys.stdout.flush()
+
         print("\033c")
         for y in range(SCREEN_HEIGHT):
             for x in range(SCREEN_WIDTH - 1, 0, -1):
@@ -138,88 +144,101 @@ def consume_server_side_events():
 
     while True:
         print("consume_server_side_events loop")
-        response = requests.get(
-            WEB_SERVICE_HOST + "/internalapi/events",
-            headers={
-                "Accept": "text/event-stream",
-                "Content-Type": "application/json",
-            },
-            stream=True,
-        )
-        assert response.ok
-        for event in sseclient.SSEClient(response).events():
-            # we get 'keep-alive' events from the server, which are nice, sure,
-            # but they are defffffffinitely not something we want to queue or care
-            # about!!!
-            if event.event == "keep-alive":
-                continue
-            print("consume_server_side_events event", event)
-            SERVER_SIDE_EVENTS_QUEUE.put(event)
+
+        try:
+            response = requests.get(
+                WEB_SERVICE_HOST + "/internalapi/events",
+                headers={
+                    "Accept": "text/event-stream",
+                    "Content-Type": "application/json",
+                },
+                stream=True,
+            )
+        except Exception as e:
+            print("consume_server_side_events exception!!!", e)
+            time.sleep(1)
+            continue
+
+        print('consume_server_side_events response???', response)
+
+        if not response.ok:
+            print("consume_server_side_events response not ok!!!", response.text)
+            time.sleep(1)
+            continue
+
+        try:
+            for event in sseclient.SSEClient(response).events():
+                print('consume_server_side_events event!!!', event)
+
+                # we get 'keep-alive' events from the server, which are nice, sure,
+                # but they are defffffffinitely not something we want to queue or care
+                # about!!!
+
+                if event.event == "keep-alive":
+                    continue
+
+                if event.event == 'show_immediately':
+                    SHOW_IDS_TO_PLAY.appendleft(json.loads(event.data)["show_id"])
+                    SHOW_IMMEDIATELY_FLAG.set()
+        except Exception as e:
+            print("consume_server_side_events exception during event loop!!!", e)
+
+        print('consume_server_side_events sleep')
         time.sleep(1)
 
 
-def get_all_shows():
+def get_all_show_ids():
     # fetch all shows from the web microservice
-    r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_shows")
+    try:
+        r = requests.get(WEB_SERVICE_HOST + "/internalapi/get_all_show_ids")
+    except Exception as e:
+        log.error(f"error fetching all show ids: {e}")
+        return []
     json_response = r.json()
-    return json_response["shows"]
+    # just a list of ids!
+    return json_response["show_ids"]
 
+def get_show(show_id):
+    try:
+        r = requests.get(
+            WEB_SERVICE_HOST + f"/internalapi/get_show/{show_id}"
+        )
+    except Exception as e:
+        log.error(f"error fetching show id {show_id}: {e}")
+        return None
+
+    # handle 404/errors by returning None!
+    if not r.ok:
+        return None
+    json_response = r.json()
+    return json_response
 
 def worker():
     while True:
         log.info("worker loop")
 
-        all_shows = get_all_shows()
-        for show in all_shows:
-            print("show type", show["show_type"])
-            print("show", json.dumps(show)[:100], "...")
+        all_show_ids = get_all_show_ids()
+        # push them onto the deque
+        for show_id in all_show_ids:
+            SHOW_IDS_TO_PLAY.append(show_id)
+
+        while len(SHOW_IDS_TO_PLAY):
+            show_id = SHOW_IDS_TO_PLAY.popleft()
+            show = get_show(show_id)
+            if show is None:
+                log.info(f"show id {show_id} not found, skipping")
+                continue
 
             for frame in receive_frames_from_renderer(
                 show["show_type"], json_payload=show["payload"]
             ):
-                # print("receive_frames_from_renderer")
-                # we processed 1 frame, we can do other things now
                 send_frame_to_display(frame)
 
-                # get any event from the queue, but don't block if there's no event
-                event = None
-                try:
-                    event = SERVER_SIDE_EVENTS_QUEUE.get(block=False)
-                except queue.Empty:
-                    pass
-
-                if event and event.event == "show_immediately":
-                    show_id = json.loads(event.data)["show_id"]
-                    print(f"IMMEDIATELY JUMPING TO SHOW {show_id}")
-
-                    # Load all the shows again in case they just added it! Helps with _rapid_ prototyping
-                    all_shows = get_all_shows()
-                    filtered_shows = [
-                        show for show in all_shows if show["id"] == show_id
-                    ]
-                    assert len(filtered_shows) == 1, "did not find show??"
-                    show = filtered_shows[0]
-                    # and immediately show show!!!
-                    for frame in receive_frames_from_renderer(
-                        show["show_type"], json_payload=show["payload"]
-                    ):
-                        # we're now locked in the interrupting show
-                        # i.e. you can't interrupt an interrupting show
-                        # with another show!
-                        send_frame_to_display(frame)
-
-                    # break out of the show that we originally interrupted
-                    # so that we don't go through all of the accumulated frames that happened
-                    # while we were showing the osc/immediate show frames
+                if SHOW_IMMEDIATELY_FLAG.is_set():
+                    log.info("SHOW_IMMEDIATELY_FLAG set, breaking out of current show")
+                    SHOW_IMMEDIATELY_FLAG.clear()
                     break
-
-            time.sleep(1)
-
-        if len(all_shows) == 0:
-            log.info(
-                "No shows found, sleeping for 1 second before re while true-ing..."
-            )
-            time.sleep(1)
+        time.sleep(1)
 
 
 if __name__ == "__main__":

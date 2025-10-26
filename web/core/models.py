@@ -34,6 +34,7 @@ class Show(models.Model):
         return preamble
 
     disabled = models.BooleanField(default=False)
+    is_preview = models.BooleanField(default=False)
 
 
 KV_DEFAULTS = {}

@@ -5,14 +5,16 @@ from django.conf import settings
 import requests
 from django.http import StreamingHttpResponse
 import json
+from django_eventstream import send_event
+import httpx
 
 api = NinjaAPI(csrf=True)
 
 @api.get("/shows", auth=django_auth)
 def get_shows(request):
-    shows = Show.objects.all().order_by('created_at')
+    shows = Show.objects.filter(is_preview=False).order_by('created_at')
     shows_data = []
-    
+
     for show in shows:
         shows_data.append({
             'id': show.id,
@@ -21,7 +23,7 @@ def get_shows(request):
             'disabled': show.disabled,
             'display_text': str(show)
         })
-    
+
     return {'shows': shows_data}
 
 @api.post("/shows/{show_id}/set_disabled", auth=django_auth)
@@ -39,6 +41,15 @@ def delete_show(request, show_id: int):
     try:
         show = Show.objects.get(id=show_id)
         show.delete()
+        return {'success': True}
+    except Show.DoesNotExist:
+        return {'success': False, 'error': 'Show not found'}
+
+@api.post("/shows/{show_id}/show_immediately", auth=django_auth)
+def show_immediately(request, show_id: int):
+    try:
+        show = Show.objects.get(id=show_id)
+        send_event("events", "show_immediately", {"show_id": show_id})
         return {'success': True}
     except Show.DoesNotExist:
         return {'success': False, 'error': 'Show not found'}
@@ -67,6 +78,53 @@ def create_show(request):
             payload=payload
         )
         
+        return {'success': True, 'show_id': show.id}
+    except json.JSONDecodeError:
+        return {'success': False, 'error': 'Invalid JSON'}
+    except Exception as e:
+        return {'success': False, 'error': str(e)}
+
+@api.post("/create-or-update-preview", auth=django_auth)
+def create_or_update_preview(request):
+    try:
+        import json
+        data = json.loads(request.body)
+
+        show_type = data.get('show_type')
+        content = data.get('content')
+        preview_show_id = data.get('preview_show_id')
+
+        if not show_type or not content:
+            return {'success': False, 'error': 'Missing show_type or content'}
+
+        if show_type not in ['text', 'p5', 'shader', 'wasm']:
+            return {'success': False, 'error': 'Invalid show_type'}
+
+        # Create payload with show_type as key
+        payload = {show_type: content}
+
+        # Update existing preview or create new one
+        if preview_show_id:
+            try:
+                show = Show.objects.get(id=preview_show_id, is_preview=True)
+                show.show_type = show_type
+                show.payload = payload
+                show.save()
+            except Show.DoesNotExist:
+                # If the preview doesn't exist, create a new one
+                show = Show.objects.create(
+                    show_type=show_type,
+                    payload=payload,
+                    is_preview=True
+                )
+        else:
+            # Create new preview show
+            show = Show.objects.create(
+                show_type=show_type,
+                payload=payload,
+                is_preview=True
+            )
+
         return {'success': True, 'show_id': show.id}
     except json.JSONDecodeError:
         return {'success': False, 'error': 'Invalid JSON'}
@@ -142,23 +200,24 @@ def preview_content(request):
         # Prepare payload for renderer
         payload = {show_type: content}
         
-        # Forward to renderer microservice
-        def stream_renderer_response():
+        # Forward to renderer microservice with async generator
+        async def stream_renderer_response():
             try:
-                response = requests.post(
-                    f"{renderer_host}/render",
-                    json=payload,
-                    stream=True,
-                    timeout=30
-                )
-                response.raise_for_status()
-                
-                for line in response.iter_lines():
-                    if line:
-                        yield line.decode('utf-8') + '\n'
+                async with httpx.AsyncClient() as client:
+                    async with client.stream(
+                        'POST',
+                        f"{renderer_host}/render",
+                        json=payload,
+                        timeout=30.0
+                    ) as response:
+                        response.raise_for_status()
+                        
+                        async for line in response.aiter_lines():
+                            if line:
+                                yield line + '\n'
             except Exception as e:
                 yield f"event: error\ndata: {str(e)}\n\n"
-        
+
         # Return SSE response
         response = StreamingHttpResponse(
             stream_renderer_response(),

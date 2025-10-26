@@ -9,7 +9,7 @@ admin.site.site_header = 'Rapid Riter Admin'
 admin.site.register(User, UserAdmin)
 
 class ShowAdmin(admin.ModelAdmin):
-    list_display = ("created_at", "show_type", "abbreviated_payload", "disabled")
+    list_display = ("created_at", "show_type", "abbreviated_payload", "disabled", "is_preview")
     
     def abbreviated_payload(self, obj):
         return str(obj)
