@@ -44,16 +44,39 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 
 ### run
 
+#### webserver
+
+- add admin user to the webserver
+
+```bash
+python manage.py createsuperuser
+```
+
 - start django
 
 ```bash
 cd web
 source venv/bin/activate
 # do not use python manage.py runserver!!!
-# do not use python manage.py runserver!!!
 ./bin/serve-dev.sh
 # WARNING: this does not have autoreload on save.......!!! yet!!!!!!!
 ```
+
+- login as the admin user to bypass oauth
+
+http://localhost:8000/admin
+
+- run the frontend
+
+```bash
+cd web/core/frontend
+npm install
+npm run dev
+```
+
+At which point, http://localhost:8000/ should look like the deployed site!
+
+#### worker
 
 - start worker
 
@@ -63,16 +86,31 @@ source venv/bin/activate
 python worker.py
 ```
 
+#### renderers
+
 - start a renderer, for example p5js:
   - this assumes that you've created a `venv` + `pip install`ed, and also ran npm install within `p5/subrenderer`
+
+- other renderers might require `npm install`, etc.
+
+- p5
 
 ```bash
 cd renderers/p5
 source venv/bin/activate
+pip install -r requirements.txt
 python p5.py
 ```
 
-- other renderers might require `npm install`, etc.
+- wasm
+
+```bash
+cd renderers/wasm
+cargo build --release
+./target/release/wasm
+```
+
+many renderers use protected ports (<1024) like port 80, 90, etc. If not running in a container, then you may need to run them with elevated permissions
 
 </details>
 
