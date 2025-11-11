@@ -6,9 +6,10 @@ use axum::{
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use futures::stream::Stream;
 use serde::Deserialize;
-use std::{convert::Infallible, time::Duration};
+use std::{convert::Infallible, time::{SystemTime, UNIX_EPOCH, Duration}};
 use tokio_stream::StreamExt;
-use wasmer::{imports, Instance, Module, Store, Value};
+use wasmer::{imports, Instance, Module, Store, Value, Function};
+
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -37,7 +38,16 @@ impl WasmRunner {
     fn new_from_wasm(payload: &str) -> anyhow::Result<WasmRunner> {
         let mut store = Store::default();
         let module = Module::new(&store, payload)?;
-        let import_object = imports! {};
+        let mytimefunc = || SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Time went backwards")
+            .as_secs();
+
+        let import_object = imports! {
+            "env" => {
+                "unixtime" => Function::new_typed(&mut store, mytimefunc),
+            }
+        };
         let instance = Instance::new(&mut store, &module, &import_object)?;
 
         Ok(WasmRunner {
