@@ -25,6 +25,7 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 - thanks to [Jakub Sygnowski](https://github.com/sygi) for help restoring the rapidriter raspi sd card, debugging, extending the p5 renderer, and the upcoming raspi ssd upgrade!
 - thanks to [Stephen D](https://www.scd31.com/) for his contributions re Rust / WASM template and for creating a local simulator - [available here](https://gitlab.scd31.com/stephen/rapidriter-cat)!
 - thanks to [Florian Ragwitz](https://github.com/rafl) for their help in making the "show immediately" functionality work again, and a much needed refactoring of the main worker loop codebase!
+- thanks to [Joe Lothan](https://github.com/lothan) for his contribution of unixtime to the WASM renderer!
 
 ---
 
