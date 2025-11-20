@@ -1,4 +1,5 @@
 use axum::{
+    extract::DefaultBodyLimit,
     response::sse::{Event, Sse},
     routing::post,
     Json, Router,
@@ -13,7 +14,10 @@ use wasmer::{imports, Instance, Module, Store, Value, Function};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let app = Router::new().route("/render", post(render));
+    let app = Router::new()
+        .route("/render", post(render))
+        // Increase body limit to 50MB to handle large WAT files
+        .layer(DefaultBodyLimit::max(50 * 1024 * 1024));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:80").await.unwrap();
     let _ = axum::serve(listener, app).await;
