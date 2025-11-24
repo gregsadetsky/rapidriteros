@@ -25,6 +25,7 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 - thanks to [Jakub Sygnowski](https://github.com/sygi) for help restoring the rapidriter raspi sd card, debugging, extending the p5 renderer, and the upcoming raspi ssd upgrade!
 - thanks to [Stephen D](https://www.scd31.com/) for his contributions re Rust / WASM template and for creating a local simulator - [available here](https://gitlab.scd31.com/stephen/rapidriter-cat)!
 - thanks to [Florian Ragwitz](https://github.com/rafl) for their help in making the "show immediately" functionality work again, and a much needed refactoring of the main worker loop codebase!
+- thanks to [Joe Lothan](https://github.com/lothan) for his contribution of unixtime to the WASM renderer!
 
 ---
 
@@ -43,25 +44,41 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 
 ### run
 
-- start django (i.e. the web backend)
+#### webserver
+
+- add admin user to the webserver
+
+```bash
+python manage.py createsuperuser
+```
+
+- start django
 
 ```bash
 cd web
 source venv/bin/activate
 # do not use python manage.py runserver!!!
-# do not use python manage.py runserver!!!
 ./bin/serve-dev.sh
 # WARNING: this does not have autoreload on save.......!!! yet!!!!!!!
 ```
 
-- start the web frontend
+- login as the admin user to bypass oauth
+
+http://localhost:8000/admin
+
+- run the frontend
 
 ```bash
-cd web/frontend
+cd web/core/frontend
+npm install
 npm run dev
 ```
 
-- start the worker
+At which point, http://localhost:8000/ should look like the deployed site!
+
+#### worker
+
+- start worker
 
 ```bash
 cd worker
@@ -69,16 +86,31 @@ source venv/bin/activate
 python worker.py
 ```
 
+#### renderers
+
 - start a renderer, for example p5js:
   - this assumes that you've created a `venv` + `pip install`ed, and also ran npm install within `p5/subrenderer`
+
+- other renderers might require `npm install`, etc.
+
+- p5
 
 ```bash
 cd renderers/p5
 source venv/bin/activate
+pip install -r requirements.txt
 python p5.py
 ```
 
-- other renderers might require `npm install`, etc.
+- wasm
+
+```bash
+cd renderers/wasm
+cargo build --release
+./target/release/wasm
+```
+
+many renderers use protected ports (<1024) like port 80, 90, etc. If not running in a container, then you may need to run them with elevated permissions
 
 </details>
 
