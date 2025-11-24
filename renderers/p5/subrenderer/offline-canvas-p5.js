@@ -1,6 +1,7 @@
 const Window = require("window");
 const fs = require("fs");
 const { Blob } = require("./blob.js");
+const { ImageData } = require("canvas");
 
 // get path to program file as argument
 const programFilePath = process.argv[2];
@@ -21,6 +22,7 @@ global.HTMLCanvasElement = global.window.HTMLCanvasElement;
 global.DOMPoint = global.window.DOMPoint;
 global.Event = global.window.Event;
 global.Image = global.window.Image;
+global.ImageData = ImageData;
 
 const startTime = Date.now();
 const RUN_PROGRAM_FOR_SECONDS = 30;
