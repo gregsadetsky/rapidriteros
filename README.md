@@ -43,7 +43,7 @@ the rapidriter code is deployed and managed using [disco](https://letsdisco.dev/
 
 ### run
 
-- start django
+- start django (i.e. the web backend)
 
 ```bash
 cd web
@@ -54,7 +54,14 @@ source venv/bin/activate
 # WARNING: this does not have autoreload on save.......!!! yet!!!!!!!
 ```
 
-- start worker
+- start the web frontend
+
+```bash
+cd web/frontend
+npm run dev
+```
+
+- start the worker
 
 ```bash
 cd worker
