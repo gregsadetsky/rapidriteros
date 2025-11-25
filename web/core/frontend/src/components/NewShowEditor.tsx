@@ -242,7 +242,7 @@ export const NewShowEditor: React.FC<NewShowEditorProps> = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Content ({showType})
             </label>
-            <div className="border border-gray-300 rounded-md" style={{ minHeight: '400px' }}>
+            <div className="border border-gray-300 rounded-md" style={{ height: '600px', overflow: 'auto' }}>
               <Editor
                 value={content}
                 onValueChange={setContent}
@@ -254,7 +254,6 @@ export const NewShowEditor: React.FC<NewShowEditorProps> = ({
                 style={{
                   fontFamily: '"Fira code", "Fira Mono", monospace',
                   fontSize: 14,
-                  minHeight: '400px',
                   backgroundColor: '#fafafa',
                 }}
               />
