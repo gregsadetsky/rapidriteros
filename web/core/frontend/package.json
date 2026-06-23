@@ -16,6 +16,7 @@
         "prismjs": "^1.30.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
+        "react-router": "^8.0.1",
         "react-simple-code-editor": "^0.14.1",
         "tailwindcss": "^4.1.12"
     },
@@ -30,6 +31,7 @@
         "eslint-plugin-react-hooks": "^5.1.0-rc.0",
         "eslint-plugin-react-refresh": "^0.4.9",
         "globals": "^15.9.0",
+        "prettier": "^3.8.4",
         "typescript": "^5.5.3",
         "typescript-eslint": "^8.0.1",
         "vite": "^6.0.3"
