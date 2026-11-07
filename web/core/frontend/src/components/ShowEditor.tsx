@@ -7,6 +7,7 @@ import 'prismjs/themes/prism.css';
 import React, { useEffect, useRef, useState } from 'react';
 import Editor from 'react-simple-code-editor';
 import { renderToCanvas } from '../utils/canvas';
+import { focusEditorOnClick } from '../utils/focusEditor';
 import { ShowNotes } from './ShowNotes';
 const { highlight, languages } = Prism;
 
@@ -253,7 +254,11 @@ export const ShowEditor: React.FC<ShowEditorProps> = ({ show, onClose, onSave })
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Content ({show.show_type})
             </label>
-            <div className="border border-gray-300 rounded-md" style={{ height: '600px', overflow: 'auto' }}>
+            <div
+              className="border border-gray-300 rounded-md"
+              style={{ height: '600px', overflow: 'auto' }}
+              onClick={focusEditorOnClick}
+            >
               <Editor
                 value={payload}
                 onValueChange={setPayload}
