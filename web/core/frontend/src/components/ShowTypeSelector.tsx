@@ -1,5 +1,7 @@
 import React from 'react';
 
+export const SHOW_TYPES = ['text', 'p5', 'shader', 'wasm'];
+
 interface ShowTypeSelectorProps {
   onSelectType: (type: string) => void;
   onCancel: () => void;
@@ -9,8 +11,6 @@ export const ShowTypeSelector: React.FC<ShowTypeSelectorProps> = ({
   onSelectType, 
   onCancel 
 }) => {
-  const showTypes = ['text', 'p5', 'shader', 'wasm'];
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
@@ -27,7 +27,7 @@ export const ShowTypeSelector: React.FC<ShowTypeSelectorProps> = ({
         <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Select Show Type</h2>
           <div className="grid grid-cols-2 gap-4">
-            {showTypes.map(type => (
+            {SHOW_TYPES.map(type => (
               <button
                 key={type}
                 onClick={() => onSelectType(type)}

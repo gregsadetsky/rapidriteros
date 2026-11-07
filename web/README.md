@@ -28,3 +28,19 @@ python manage.py runserver
 - run ngrok - `ngrok http 8000`
 - go to https://www.recurse.com/domains and update the `rapidriter-dev.recurse.com` domain to point to the ngrok domain it `https://...ngrok-free.app`
 - update the `.env` and add the ngrok domain to `ALLOWED_HOSTS`
+
+## frontend tests and commit hook
+
+```bash
+cd web/core/frontend
+npm ci
+npm test            # vitest (jsdom, no backend needed)
+npm run typecheck
+```
+
+To run the typecheck + tests automatically on commit (only when files under `web/core/frontend/` change):
+
+```bash
+pip install pre-commit
+pre-commit install
+```

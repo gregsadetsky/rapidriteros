@@ -1,0 +1,10 @@
+# Setup: `pip install pre-commit && pre-commit install`
+repos:
+  - repo: local
+    hooks:
+      - id: frontend-typecheck-and-test
+        name: frontend typecheck + tests
+        entry: bash -c 'npm --prefix web/core/frontend run typecheck && npm --prefix web/core/frontend test'
+        language: system
+        files: ^web/core/frontend/
+        pass_filenames: false
