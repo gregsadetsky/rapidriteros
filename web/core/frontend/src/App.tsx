@@ -1,9 +1,9 @@
 import Cookies from 'js-cookie';
 import { useEffect, useState } from "react";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
-import { NewShowEditor } from './components/NewShowEditor';
 import { ShowCard } from './components/ShowCard';
-import { ShowEditor } from './components/ShowEditor';
+import { NewShowEditorRoute, ShowEditorRoute } from './components/ShowRoutes';
 import { ShowTypeSelector } from './components/ShowTypeSelector';
 
 interface Show {
@@ -14,21 +14,11 @@ interface Show {
   display_text: string;
 }
 
-interface ShowDetail {
-  id: number;
-  show_type: string;
-  payload: any;
-  created_at: string;
-  disabled: boolean;
-}
-
 function App() {
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [editingShow, setEditingShow] = useState<ShowDetail | null>(null);
-  const [addingShow, setAddingShow] = useState(false);
-  const [selectedShowType, setSelectedShowType] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const fetchShows = () => {
     fetch('/api/shows')
@@ -125,61 +115,14 @@ function App() {
     }
   }
 
-  const editShow = async (showId: number) => {
-    try {
-      const response = await fetch(`/api/shows/${showId}`, {
-        headers: {
-          'X-CSRFToken': getCsrfToken(),
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch show details');
-      }
-
-      const data = await response.json();
-      if (data.success) {
-        setEditingShow(data.show);
-      }
-    } catch (err) {
-      console.error('Error fetching show details:', err);
-    }
+  const editShow = (showId: number) => {
+    navigate(`/shows/${showId}`);
   };
 
-  const closeEditor = () => {
-    setEditingShow(null);
-  };
-
-  const startAddingShow = () => {
-    setAddingShow(true);
-    setSelectedShowType(null);
-  };
-
-  const selectShowType = (showType: string) => {
-    setSelectedShowType(showType);
-  };
-
-  const cancelAddShow = () => {
-    setAddingShow(false);
-    setSelectedShowType(null);
-  };
-
-  const handleSaveNewShow = () => {
-    cancelAddShow();
+  const handleSave = () => {
+    navigate('/');
     fetchShows();
   };
-
-  const backToTypeSelection = () => {
-    setSelectedShowType(null);
-  };
-
-
-
-  const handleSaveShow = () => {
-    closeEditor();
-    fetchShows();
-  };
-
 
   const getCsrfToken = () => {
     return Cookies.get('csrftoken') || '';
@@ -203,43 +146,13 @@ function App() {
     </div>
   );
 
-  if (editingShow) {
-    return (
-      <ShowEditor 
-        show={editingShow}
-        onClose={closeEditor}
-        onSave={handleSaveShow}
-      />
-    );
-  }
-
-  if (addingShow) {
-    if (!selectedShowType) {
-      return (
-        <ShowTypeSelector 
-          onSelectType={selectShowType}
-          onCancel={cancelAddShow}
-        />
-      );
-    } else {
-      return (
-        <NewShowEditor 
-          showType={selectedShowType}
-          onCancel={cancelAddShow}
-          onSave={handleSaveNewShow}
-          onBackToTypeSelection={backToTypeSelection}
-        />
-      );
-    }
-  }
-
-  return (
+  const listView = (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Rapid Riter Shows</h1>
           <button
-            onClick={startAddingShow}
+            onClick={() => navigate('/new')}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors cursor-pointer"
           >
             Add Show
@@ -284,6 +197,24 @@ function App() {
         </div>
       </footer>
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/" element={listView} />
+      <Route
+        path="/new"
+        element={
+          <ShowTypeSelector
+            onSelectType={type => navigate(`/new/${type}`)}
+            onCancel={() => navigate('/')}
+          />
+        }
+      />
+      <Route path="/new/:type" element={<NewShowEditorRoute onSave={handleSave} />} />
+      <Route path="/shows/:id" element={<ShowEditorRoute onSave={handleSave} />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
